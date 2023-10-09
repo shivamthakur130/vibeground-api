@@ -1,30 +1,66 @@
+import { Param } from './../../node_modules/cloudinary-core/cloudinary-core.d';
 import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
-import { CreateUserDto, FanStep1Dto, FanStep2Dto, FanStep3Dto, FanStep4Dto, FanStep5Dto, FanStep6Dto } from '@dtos/users.dto';
+import {
+  CreateUserDto,
+  FanEmailDto,
+  FanDetailsDto,
+  FanPasswordDto,
+  FanDateofBirthDto,
+  FanGenderDto,
+  FanLocationDto,
+  ModelDetailsDto,
+  ModelAboutDto,
+  ModelDOBDto,
+  ModelPassPortDto,
+} from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
 import authMiddleware from '@middlewares/auth.middleware';
 import validationMiddleware from '@middlewares/validation.middleware';
+import { cloudinary } from '@utils/cloudinary';
+import multer from 'multer';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+
+import { CLOUDINARY_IMAGE_FOLDER } from '@config';
 
 class AuthRoute implements Routes {
   public path = '/';
   public router = Router();
   public authController = new AuthController();
-
+  public upload = multer({
+    storage: new CloudinaryStorage({
+      cloudinary: cloudinary,
+      params: {
+        folder: CLOUDINARY_IMAGE_FOLDER
+      },
+    }),
+  });
   constructor() {
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
     // Fan
-    this.router.post(`${this.path}fan/register1`, validationMiddleware(FanStep1Dto, 'body'), this.authController.fanstep1);
-    this.router.post(`${this.path}fan/register2`, validationMiddleware(FanStep2Dto, 'body'), this.authController.fanstep2);
-    this.router.post(`${this.path}fan/register3`, validationMiddleware(FanStep3Dto, 'body'), this.
-    authController.fanstep3);
-    this.router.post(`${this.path}fan/register4`, validationMiddleware(FanStep4Dto, 'body'), this.
-    authController.fanstep4);
-    this.router.post(`${this.path}fan/register5`, validationMiddleware(FanStep5Dto, 'body'), this.
-    authController.fanstep5);
-    this.router.post(`${this.path}fan/register6`, validationMiddleware(FanStep6Dto, 'body'), this.authController.fanstep6);
+    this.router.post(`${this.path}fan/email`, validationMiddleware(FanEmailDto, 'body'), this.authController.FanEmail);
+    this.router.post(`${this.path}fan/details`, validationMiddleware(FanDetailsDto, 'body'), this.authController.FanDetails);
+    this.router.post(`${this.path}fan/password`, validationMiddleware(FanPasswordDto, 'body'), this.authController.FanPasword);
+    this.router.post(`${this.path}fan/dob`, validationMiddleware(FanDateofBirthDto, 'body'), this.authController.FanDateofBirth);
+    this.router.post(`${this.path}fan/gender`, validationMiddleware(FanGenderDto, 'body'), this.authController.FanGender);
+    this.router.post(`${this.path}fan/location`, validationMiddleware(FanLocationDto, 'body'), this.authController.FanLocation);
+
+    // Model
+    this.router.post(`${this.path}model/details`, validationMiddleware(ModelDetailsDto, 'body'), this.authController.ModelDetails);
+    this.router.post(`${this.path}model/about`, validationMiddleware(ModelAboutDto, 'body'), this.authController.ModelAbout);
+    this.router.post(`${this.path}model/dob`, validationMiddleware(ModelDOBDto, 'body'), this.authController.ModelDateOfBirth);
+    this.router.post(
+      `${this.path}model/passport`,
+      this.upload.fields([
+        { name: 'passport_front', maxCount: 1 },
+        { name: 'passport_back', maxCount: 1 },
+      ]),
+      validationMiddleware(ModelPassPortDto, 'body'),
+      this.authController.ModelPassPort,
+    );
 
     // other
     this.router.post(`${this.path}signup`, validationMiddleware(CreateUserDto, 'body'), this.authController.signUp);

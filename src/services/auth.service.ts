@@ -1,7 +1,18 @@
 import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
-import { CreateUserDto, FanStep1Dto, FanStep2Dto, FanStep3Dto, FanStep4Dto, FanStep5Dto, FanStep6Dto } from '@dtos/users.dto';
+import {
+  CreateUserDto,
+  FanEmailDto,
+  FanDetailsDto,
+  FanPasswordDto,
+  FanDateofBirthDto,
+  FanGenderDto,
+  FanLocationDto,
+  ModelDetailsDto,
+  ModelAboutDto,
+  ModelDOBDto,
+} from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
@@ -12,19 +23,82 @@ import moment from 'moment';
 class AuthService {
   public users = userModel;
 
-  // Fan
+  //Model
   //**--- Step 1 */
-  public async FanSetp1(userData: FanStep1Dto): Promise<User> {
+  public async ModelDetails(userData: ModelDetailsDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+    const findUser: User = await this.users.findOne({ email: userData.email, type: 'model' });
+    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+    const hashedPassword = await hash(userData.password, 10);
+    userData.password = hashedPassword;
+    userData.type = 'model';
+    let createUserData: any = await this.users.create({ ...userData });
+    delete createUserData._doc.password;
+    if (createUserData._doc?.date_of_birth != null) {
+      let dob = moment(createUserData._doc.date_of_birth).format('DD-MM-YYYY');
+      createUserData._doc.date_of_birth = dob;
+    }
+    return createUserData;
+  }
+
+  public async ModelAbout(userData: ModelAboutDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId },
+      {
+        $set: {
+          about: userData.about,
+        },
+      },
+    );
+    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  }
+
+  public async ModelDateofBirth(userData: ModelDOBDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    const date = moment(userData.dob, 'DD-MM-YYYY').utcOffset('+05:30');
+
+    // issue on date
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId, type: "model" },
+      {
+        $set: {
+          date_of_birth: date,
+        },
+      },
+    );
+
+    let findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  }
+
+  // Fan
+  //**--- Step 1 */
+  public async FanEmail(userData: FanEmailDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    const findUser: User = await this.users.findOne({ email: userData.email, type: 'fan' });
+    userData.type = 'fan';
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
     const createUserData: User = await this.users.create({ ...userData });
 
     return createUserData;
   }
   //**--- Step 2 */
-  public async FanSetp2(userData: FanStep2Dto): Promise<User> {
+  public async FanDetails(userData: FanDetailsDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const createUserData: User = await this.users.findOneAndUpdate(
@@ -38,12 +112,16 @@ class AuthService {
       },
     );
 
-    const findUserT: User = await this.users.findOne({ _id: userData.userId });
-
+    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    if (findUserT._doc?.password != null) delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
     return findUserT;
   }
   //**--- Step 3 */
-  public async FanSetp3(userData: FanStep3Dto): Promise<User> {
+  public async FanPassword(userData: FanPasswordDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
     const hashedPassword = await hash(userData.password, 10);
     const createUserData: User = await this.users.findOneAndUpdate(
@@ -55,19 +133,21 @@ class AuthService {
       },
     );
 
-    const findUserT: User = await this.users.findOne({ _id: userData.userId });
-
+    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
     return findUserT;
   }
   //**--- Step 4 */
-  public async FanSetp4(userData: FanStep4Dto): Promise<User> {
+  public async FanDateofBirth(userData: FanDateofBirthDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const date = moment(userData.dob, 'DD-MM-YYYY').utcOffset('+05:30');
 
     // issue on date
-    console.log(date);
-
     const createUserData: User = await this.users.findOneAndUpdate(
       { _id: userData.userId },
       {
@@ -77,12 +157,15 @@ class AuthService {
       },
     );
 
-    const findUserT: User = await this.users.findOne({ _id: userData.userId });
-
+    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    delete findUserT._doc.password;
+    let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+    findUserT._doc.date_of_birth = dob;
     return findUserT;
   }
+
   //**--- Step 5 */
-  public async FanSetp5(userData: FanStep5Dto): Promise<User> {
+  public async FanGender(userData: FanGenderDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const createUserData: User = await this.users.findOneAndUpdate(
@@ -94,12 +177,14 @@ class AuthService {
       },
     );
 
-    const findUserT: User = await this.users.findOne({ _id: userData.userId });
-
+    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    delete findUserT._doc.password;
+    let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+    findUserT._doc.date_of_birth = dob;
     return findUserT;
   }
   //**--- Step 6 */
-  public async FanSetp6(userData: FanStep6Dto): Promise<User> {
+  public async FanLocation(userData: FanLocationDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const createUserData: User = await this.users.findOneAndUpdate(
@@ -112,12 +197,20 @@ class AuthService {
       },
     );
 
-    const findUserT: User = await this.users.findOne({ _id: userData.userId });
+    let findUserT: any = await this.users.findOne({ _id: userData.userId });
 
+    delete findUserT._doc.password;
+    let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+    findUserT._doc.date_of_birth = dob;
     return findUserT;
   }
 
   // other
+
+  public async findUserByIdWithType(userid: String, type: String): Promise<User> {
+    const findUser: User = await this.users.findOne({ _id: userid, type: type });
+    return findUser;
+  }
 
   public async findUserById(userid: String): Promise<User> {
     const findUser: User = await this.users.findOne({ _id: userid });

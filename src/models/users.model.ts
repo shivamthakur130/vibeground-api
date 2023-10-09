@@ -12,7 +12,6 @@ const userSchema: Schema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
     lowercase: true,
   },
@@ -53,6 +52,11 @@ const userSchema: Schema = new Schema({
   },
   country: {
     type: String,
+  },
+
+  about:  {
+    type: String,
+    maxLength: 1024
   },
 
   status: {

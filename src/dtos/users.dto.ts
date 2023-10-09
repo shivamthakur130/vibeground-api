@@ -1,4 +1,4 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsString, MaxLength, IsOptional } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -10,7 +10,7 @@ export class CreateUserDto {
 
 
 
-export class FanStep1Dto {
+export class FanEmailDto {
   @IsEmail()
   public email: string;
 
@@ -18,7 +18,7 @@ export class FanStep1Dto {
   public type: string;
 }
 
-export class FanStep2Dto {
+export class FanDetailsDto {
   @IsString()
   public userId: string;
 
@@ -32,7 +32,7 @@ export class FanStep2Dto {
   public userName: string;
 }
 
-export class FanStep3Dto {
+export class FanPasswordDto {
   @IsString()
   public userId: string;
 
@@ -40,7 +40,7 @@ export class FanStep3Dto {
   public password: string;
 }
 
-export class FanStep4Dto {
+export class FanDateofBirthDto {
   @IsString()
   public userId: string;
 
@@ -48,7 +48,8 @@ export class FanStep4Dto {
   public dob: string;
 }
 
-export class FanStep5Dto {
+
+export class FanGenderDto {
   @IsString()
   public userId: string;
 
@@ -57,7 +58,7 @@ export class FanStep5Dto {
 }
 
 
-export class FanStep6Dto {
+export class FanLocationDto {
   @IsString()
   public userId: string;
 
@@ -68,3 +69,52 @@ export class FanStep6Dto {
   public city: string;
 }
 
+// Model
+
+export class ModelDetailsDto {
+  @IsString()
+  public firstName: string;
+
+  @IsString()
+  public lastName: string;
+
+  @IsString()
+  public userName: string;
+
+  @IsString()
+  public password: string;
+
+  @IsEmail()
+  public email: string;
+
+  @IsString()
+  public type: string;
+}
+export class ModelAboutDto {
+  @IsString()
+  @MaxLength(1024, { message: 'About Maximum length is less then or equals to 1024 character.' })
+  public about: string;
+
+  @IsString()
+  public userId: string;
+}
+
+export class ModelDOBDto {
+  @IsString()
+  public userId: string;
+
+  @IsString()
+  public dob: string;
+}
+export class ModelPassPortDto {
+  @IsString()
+  public userId: string;
+
+  @IsString()
+  @IsOptional()
+  public passport_front: string;
+  
+  @IsString()
+  @IsOptional()
+  public passport_back: string;
+}

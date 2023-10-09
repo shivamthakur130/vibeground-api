@@ -1,5 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateUserDto, FanStep1Dto, FanStep2Dto, FanStep3Dto, FanStep4Dto, FanStep5Dto, FanStep6Dto } from '@dtos/users.dto';
+import {
+  CreateUserDto,
+  FanEmailDto,
+  FanDetailsDto,
+  FanPasswordDto,
+  FanDateofBirthDto,
+  FanGenderDto,
+  FanLocationDto,
+  ModelDetailsDto,
+  ModelAboutDto,
+  ModelDOBDto,
+} from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
@@ -8,12 +19,69 @@ import { HttpException } from '@exceptions/HttpException';
 class AuthController {
   public authService = new AuthService();
 
+  // Model
+  public ModelDetails = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: ModelDetailsDto = req.body;
+      // passwrod validation
+      if (userData.password.length < 8) {
+        throw new HttpException(400, `password must be at least 8 characters.`);
+      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%&? "]).*$/)) {
+        throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters #,$,%,&,!.`);
+      }
+      const signUpUserData: User = await this.authService.ModelDetails(userData);
+      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public ModelAbout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: ModelAboutDto = req.body;
+      const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
+
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+      const signUpUserData: User = await this.authService.ModelAbout(userData);
+      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public ModelDateOfBirth = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: ModelDOBDto = req.body;
+      let signUpUserData: User = await this.authService.ModelDateofBirth(userData);
+      delete signUpUserData.password;
+      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public ModelPassPort = async (req: any, res: Response, next: NextFunction) => {
+    try {
+      console.log(req.files);
+      console.log(req.body);
+      const userData: ModelDOBDto = req.body;
+      
+      /*let signUpUserData: User = await this.authService.ModelDateofBirth(userData);
+      delete signUpUserData.password;
+      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });*/
+      res.status(201).json({  message: 'signup', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   // Fan
   //**--- Step - 1 */
-  public fanstep1 = async (req: Request, res: Response, next: NextFunction) => {
+  public FanEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: FanStep1Dto = req.body;
-      const signUpUserData: User = await this.authService.FanSetp1(userData);
+      const userData: FanEmailDto = req.body;
+      const signUpUserData: User = await this.authService.FanEmail(userData);
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
       next(error);
@@ -21,9 +89,9 @@ class AuthController {
   };
 
   //**--- Step - 2 */
-  public fanstep2 = async (req: Request, res: Response, next: NextFunction) => {
+  public FanDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: FanStep2Dto = req.body;
+      const userData: FanDetailsDto = req.body;
       // check User exists;
       const user: User = await this.authService.findUserById(userData.userId);
 
@@ -31,7 +99,7 @@ class AuthController {
         throw new HttpException(404, `User not found.`);
       }
 
-      const signUpUserData: User = await this.authService.FanSetp2(userData);
+      const signUpUserData: User = await this.authService.FanDetails(userData);
 
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
@@ -40,9 +108,9 @@ class AuthController {
   };
 
   //**--- Step - 3 */
-  public fanstep3 = async (req: Request, res: Response, next: NextFunction) => {
+  public FanPasword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: FanStep3Dto = req.body;
+      const userData: FanPasswordDto = req.body;
 
       // passwrod validation
       if (userData.password.length < 8) {
@@ -58,8 +126,9 @@ class AuthController {
         throw new HttpException(404, `User not found.`);
       }
 
-      const signUpUserData: User = await this.authService.FanSetp3(userData);
+      let signUpUserData: User = await this.authService.FanPassword(userData);
 
+      delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
       next(error);
@@ -67,10 +136,11 @@ class AuthController {
   };
 
   //**--- Step - 4 */
-  public fanstep4 = async (req: Request, res: Response, next: NextFunction) => {
+  public FanDateofBirth = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: FanStep4Dto = req.body;
-      const signUpUserData: User = await this.authService.FanSetp4(userData);
+      const userData: FanDateofBirthDto = req.body;
+      let signUpUserData: User = await this.authService.FanDateofBirth(userData);
+      delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
       next(error);
@@ -78,10 +148,11 @@ class AuthController {
   };
 
   //**--- Step - 5 */
-  public fanstep5 = async (req: Request, res: Response, next: NextFunction) => {
+  public FanGender = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: FanStep5Dto = req.body;
-      const signUpUserData: User = await this.authService.FanSetp5(userData);
+      const userData: FanGenderDto = req.body;
+      let signUpUserData: User = await this.authService.FanGender(userData);
+      delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
       next(error);
@@ -89,10 +160,11 @@ class AuthController {
   };
 
   //**--- Step - 6 */
-  public fanstep6 = async (req: Request, res: Response, next: NextFunction) => {
+  public FanLocation = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: FanStep6Dto = req.body;
-      const signUpUserData: User = await this.authService.FanSetp6(userData);
+      const userData: FanLocationDto = req.body;
+      let signUpUserData: User = await this.authService.FanLocation(userData);
+      delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
       next(error);
