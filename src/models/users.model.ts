@@ -54,9 +54,19 @@ const userSchema: Schema = new Schema({
     type: String,
   },
 
-  about:  {
+  about: {
     type: String,
-    maxLength: 1024
+    maxLength: 1024,
+  },
+
+  passport_front: {
+    type: String,
+  },
+  passport_back: {
+    type: String,
+  },
+  photos: {
+    type: [String],
   },
 
   status: {

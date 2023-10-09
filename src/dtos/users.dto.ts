@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MaxLength, IsOptional } from 'class-validator';
+import { IsEmail, IsString, MaxLength, IsOptional, IsArray } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -117,4 +117,14 @@ export class ModelPassPortDto {
   @IsString()
   @IsOptional()
   public passport_back: string;
+}
+
+export class ModelPhotosDto {
+  @IsString()
+  public userId: string;
+
+  @IsArray()
+  @IsOptional()
+  public photos: string[];
+
 }

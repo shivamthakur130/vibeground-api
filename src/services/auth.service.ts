@@ -12,6 +12,8 @@ import {
   ModelDetailsDto,
   ModelAboutDto,
   ModelDOBDto,
+  ModelPhotosDto,
+  ModelPassPortDto,
 } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
@@ -68,10 +70,54 @@ class AuthService {
 
     // issue on date
     const createUserData: User = await this.users.findOneAndUpdate(
-      { _id: userData.userId, type: "model" },
+      { _id: userData.userId, type: 'model' },
       {
         $set: {
           date_of_birth: date,
+        },
+      },
+    );
+
+    let findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  }
+
+  public async ModelPassPort(userData: ModelPassPortDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    // issue on date
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId, type: 'model' },
+      {
+        $set: {
+          passport_front: userData.passport_front,
+          passport_back: userData.passport_back,
+        },
+      },
+    );
+
+    let findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  }
+  public async ModelPhotos(userData: ModelPhotosDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    // issue on date
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId, type: 'model' },
+      {
+        $set: {
+          photos: userData.photos,
         },
       },
     );

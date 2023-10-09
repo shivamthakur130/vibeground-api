@@ -9,7 +9,9 @@ import {
   FanLocationDto,
   ModelDetailsDto,
   ModelAboutDto,
+  ModelPassPortDto,
   ModelDOBDto,
+  ModelPhotosDto,
 } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
@@ -54,6 +56,11 @@ class AuthController {
   public ModelDateOfBirth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: ModelDOBDto = req.body;
+      const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
+
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
       let signUpUserData: User = await this.authService.ModelDateofBirth(userData);
       delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
@@ -61,16 +68,73 @@ class AuthController {
       next(error);
     }
   };
+
   public ModelPassPort = async (req: any, res: Response, next: NextFunction) => {
+    try {
+      const userData: ModelPassPortDto = req.body;
+
+      const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
+
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+
+      let front = false;
+      let back = false;
+      if (req?.files != null) {
+        if (req?.files?.passport_front != null && req?.files?.passport_front.length > 0) {
+          let obj = req?.files?.passport_front[0];
+          if (obj?.path != null && obj?.path != '') {
+            userData.passport_front = obj?.path;
+            front = true;
+          }
+        }
+        if (req?.files?.passport_back != null && req?.files?.passport_back.length > 0) {
+          let obj = req?.files?.passport_back[0];
+          if (obj?.path != null && obj?.path != '') {
+            userData.passport_back = obj?.path;
+            back = true;
+          }
+        }
+      }
+
+      if (front == true && back == true) {
+        let signUpUserData: User = await this.authService.ModelPassPort(userData);
+        delete signUpUserData.password;
+        res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+      } else {
+        throw new HttpException(404, `Passport both side image is required.`);
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+  public ModelPhotos = async (req: any, res: Response, next: NextFunction) => {
     try {
       console.log(req.files);
       console.log(req.body);
-      const userData: ModelDOBDto = req.body;
-      
-      /*let signUpUserData: User = await this.authService.ModelDateofBirth(userData);
-      delete signUpUserData.password;
-      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });*/
-      res.status(201).json({  message: 'signup', status: true });
+      const userData: ModelPhotosDto = req.body;
+
+      const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
+
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+      let photos: string[] = [];
+      if (req?.files != null && req?.files.length > 0) {
+        for (let i = 0; i < req?.files.length; i++) {
+          const obj = req?.files[i];
+          if (obj?.path != null && obj?.path != '') {
+            photos.push(obj?.path);
+          }
+        }
+        userData.photos = photos;
+        let signUpUserData: User = await this.authService.ModelPhotos(userData);
+        delete signUpUserData.password;
+        res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+      } else {
+        throw new HttpException(404, `Atleast one image is required.`);
+      }
     } catch (error) {
       next(error);
     }

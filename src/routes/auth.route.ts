@@ -11,6 +11,7 @@ import {
   FanLocationDto,
   ModelDetailsDto,
   ModelAboutDto,
+  ModelPhotosDto,
   ModelDOBDto,
   ModelPassPortDto,
 } from '@dtos/users.dto';
@@ -31,9 +32,16 @@ class AuthRoute implements Routes {
     storage: new CloudinaryStorage({
       cloudinary: cloudinary,
       params: {
-        folder: CLOUDINARY_IMAGE_FOLDER
+        folder: CLOUDINARY_IMAGE_FOLDER,
       },
     }),
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype.startsWith('image')) {
+        cb(null, true);
+      } else {
+        cb('Not an image! Please upload only images.', false);
+      }
+    },
   });
   constructor() {
     this.initializeRoutes();
@@ -60,6 +68,13 @@ class AuthRoute implements Routes {
       ]),
       validationMiddleware(ModelPassPortDto, 'body'),
       this.authController.ModelPassPort,
+    );
+
+    this.router.post(
+      `${this.path}model/photos`,
+      this.upload.any('photos'),
+      validationMiddleware(ModelPhotosDto, 'body'),
+      this.authController.ModelPhotos,
     );
 
     // other

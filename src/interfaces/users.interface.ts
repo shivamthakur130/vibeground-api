@@ -12,5 +12,7 @@ export interface User {
   country: string;
   status: string;
   password: string;
+  passport_back: string;
+  passport_front: string;
   isEmailVerified: boolean;
 }
