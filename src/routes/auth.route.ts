@@ -52,9 +52,9 @@ class AuthRoute implements Routes {
     this.router.post(`${this.path}fan/email`, validationMiddleware(FanEmailDto, 'body'), this.authController.FanEmail);
     this.router.post(`${this.path}fan/details`, validationMiddleware(FanDetailsDto, 'body'), this.authController.FanDetails);
     this.router.post(`${this.path}fan/password`, validationMiddleware(FanPasswordDto, 'body'), this.authController.FanPasword);
-    this.router.post(`${this.path}fan/dob`, validationMiddleware(FanDateofBirthDto, 'body'), this.authController.FanDateofBirth);
-    this.router.post(`${this.path}fan/gender`, validationMiddleware(FanGenderDto, 'body'), this.authController.FanGender);
-    this.router.post(`${this.path}fan/location`, validationMiddleware(FanLocationDto, 'body'), this.authController.FanLocation);
+    this.router.post(`${this.path}fan/dob`, authMiddleware, validationMiddleware(FanDateofBirthDto, 'body'), this.authController.FanDateofBirth);
+    this.router.post(`${this.path}fan/gender`, authMiddleware, validationMiddleware(FanGenderDto, 'body'), this.authController.FanGender);
+    this.router.post(`${this.path}fan/location`, authMiddleware, validationMiddleware(FanLocationDto, 'body'), this.authController.FanLocation);
 
     // Model
     this.router.post(`${this.path}model/details`, validationMiddleware(ModelDetailsDto, 'body'), this.authController.ModelDetails);
@@ -78,7 +78,7 @@ class AuthRoute implements Routes {
     );
 
     // other
-    this.router.post(`${this.path}signup`, validationMiddleware(CreateUserDto, 'body'), this.authController.signUp);
+  /*  this.router.post(`${this.path}signup`, validationMiddleware(CreateUserDto, 'body'), this.authController.signUp);*/
     this.router.post(`${this.path}login`, validationMiddleware(CreateUserDto, 'body'), this.authController.logIn);
     this.router.post(`${this.path}logout`, authMiddleware, this.authController.logOut);
   }

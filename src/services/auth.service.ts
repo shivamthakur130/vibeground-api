@@ -179,11 +179,15 @@ class AuthService {
       },
     );
 
-    const findUserT: any = await this.users.findOne({ _id: userData.userId });
+    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+
+    const tokenData = this.createToken(findUserT);
+    findUserT._doc.token = tokenData.token;
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
+      
     }
     return findUserT;
   }
@@ -275,19 +279,24 @@ class AuthService {
     return createUserData;
   }
 
-  public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: User }> {
+  public async login(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    let findUser: any = await this.users.findOne({ email: userData.email, type: userData.type });
+
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
 
     const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
     if (!isPasswordMatching) throw new HttpException(409, 'Password is not matching');
 
     const tokenData = this.createToken(findUser);
-    const cookie = this.createCookie(tokenData);
-
-    return { cookie, findUser };
+    findUser._doc.token = tokenData.token;
+    delete findUser._doc.password;
+    if (findUser._doc?.date_of_birth != null) {
+      const dob = moment(findUser._doc.date_of_birth).format('DD-MM-YYYY');
+      findUser._doc.date_of_birth = dob;
+    }
+    return findUser;
   }
 
   public async logout(userData: User): Promise<User> {
