@@ -34,10 +34,10 @@ class AuthService {
     const hashedPassword = await hash(userData.password, 10);
     userData.password = hashedPassword;
     userData.type = 'model';
-    let createUserData: any = await this.users.create({ ...userData });
+    const createUserData: any = await this.users.create({ ...userData });
     delete createUserData._doc.password;
     if (createUserData._doc?.date_of_birth != null) {
-      let dob = moment(createUserData._doc.date_of_birth).format('DD-MM-YYYY');
+      const dob = moment(createUserData._doc.date_of_birth).format('DD-MM-YYYY');
       createUserData._doc.date_of_birth = dob;
     }
     return createUserData;
@@ -54,10 +54,10 @@ class AuthService {
         },
       },
     );
-    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
-      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
     }
     return findUserT;
@@ -78,10 +78,10 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
-      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
     }
     return findUserT;
@@ -101,10 +101,10 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
-      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
     }
     return findUserT;
@@ -122,10 +122,10 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
-      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
     }
     return findUserT;
@@ -158,10 +158,10 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     if (findUserT._doc?.password != null) delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
-      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
     }
     return findUserT;
@@ -179,10 +179,10 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
-      let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
     }
     return findUserT;
@@ -203,9 +203,9 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
-    let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+    const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
     findUserT._doc.date_of_birth = dob;
     return findUserT;
   }
@@ -223,9 +223,9 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
-    let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+    const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
     findUserT._doc.date_of_birth = dob;
     return findUserT;
   }
@@ -243,10 +243,10 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
 
     delete findUserT._doc.password;
-    let dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+    const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
     findUserT._doc.date_of_birth = dob;
     return findUserT;
   }

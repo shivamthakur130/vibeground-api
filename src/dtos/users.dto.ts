@@ -8,8 +8,6 @@ export class CreateUserDto {
   public password: string;
 }
 
-
-
 export class FanEmailDto {
   @IsEmail()
   public email: string;
@@ -48,7 +46,6 @@ export class FanDateofBirthDto {
   public dob: string;
 }
 
-
 export class FanGenderDto {
   @IsString()
   public userId: string;
@@ -56,7 +53,6 @@ export class FanGenderDto {
   @IsString()
   public gender: string;
 }
-
 
 export class FanLocationDto {
   @IsString()
@@ -113,7 +109,7 @@ export class ModelPassPortDto {
   @IsString()
   @IsOptional()
   public passport_front: string;
-  
+
   @IsString()
   @IsOptional()
   public passport_back: string;
@@ -126,5 +122,4 @@ export class ModelPhotosDto {
   @IsArray()
   @IsOptional()
   public photos: string[];
-
 }

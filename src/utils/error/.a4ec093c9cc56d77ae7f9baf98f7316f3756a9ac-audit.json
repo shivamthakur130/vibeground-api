@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 30
+    },
+    "auditLog": "/Users/jaykrishna/Work/lakshman/vibeground-api/src/utils/error/.a4ec093c9cc56d77ae7f9baf98f7316f3756a9ac-audit.json",
+    "files": [
+        {
+            "date": 1696877555806,
+            "name": "/Users/jaykrishna/Work/lakshman/vibeground-api/src/utils/error/2023-10-10.log",
+            "hash": "165b16eb91b9991b8a29ff93f9ffce53790e7cd3ba77530e12ff701e3941bbda"
+        }
+    ],
+    "hashType": "sha256"
+}
