@@ -24,8 +24,7 @@ const PlanSchema: Schema = new Schema({
     trim: true,
   },
   features: {
-    type: String,
-    trim: true,
+    type: [String],
   },
 });
 

@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreatePlansDto } from '@dtos/plans.dto';
 import { Transaction } from '@interfaces/transaction.interface';
 import { Plan } from '@interfaces/plan.interface';
 import TransactionService from '@services/transaction.service';
 import { HttpException } from '@exceptions/HttpException';
+import Stripe from 'stripe';
 
 class TransactionController {
   public transactionService = new TransactionService();
+  const stripe = new Stripe('sk_test_...');
 
   public getTransaction = async (req: any, res: Response, next: NextFunction) => {
     try {

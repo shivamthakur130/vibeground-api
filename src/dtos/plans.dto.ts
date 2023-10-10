@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsArray } from 'class-validator';
 
 export class CreatePlansDto {
   @IsString()
@@ -13,8 +13,8 @@ export class CreatePlansDto {
   @IsString()
   public description: string;
 
-  @IsString()
-  public features: string;
+  @IsArray()
+  public features: string[];
 
   @IsString()
   public type: string;
