@@ -7,7 +7,7 @@ import Stripe from 'stripe';
 
 class TransactionController {
   public transactionService = new TransactionService();
-  const stripe = new Stripe('sk_test_...');
+  //const stripe = new Stripe('sk_test_...');
 
   public getTransaction = async (req: any, res: Response, next: NextFunction) => {
     try {
