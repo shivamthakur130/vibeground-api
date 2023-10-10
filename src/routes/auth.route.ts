@@ -1,4 +1,3 @@
-import { Param } from './../../node_modules/cloudinary-core/cloudinary-core.d';
 import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
 import {
