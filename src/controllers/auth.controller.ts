@@ -111,8 +111,6 @@ class AuthController {
   };
   public ModelPhotos = async (req: any, res: Response, next: NextFunction) => {
     try {
-      console.log(req.files);
-      console.log(req.body);
       const userData: ModelPhotosDto = req.body;
 
       const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
