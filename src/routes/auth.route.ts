@@ -20,7 +20,7 @@ import authMiddleware from '@middlewares/auth.middleware';
 import validationMiddleware from '@middlewares/validation.middleware';
 import { cloudinary } from '@utils/cloudinary';
 import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { CloudinaryStorage, Options } from 'multer-storage-cloudinary';
 
 import { CLOUDINARY_IMAGE_FOLDER } from '@config';
 
@@ -34,7 +34,7 @@ class AuthRoute implements Routes {
       params: {
         folder: CLOUDINARY_IMAGE_FOLDER,
       },
-    }),
+    } as Options),
     fileFilter: (req, file, cb) => {
       if (file.mimetype.startsWith('image')) {
         cb(null, true);

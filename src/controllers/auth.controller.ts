@@ -61,7 +61,7 @@ class AuthController {
       if (user == null) {
         throw new HttpException(404, `User not found.`);
       }
-      let signUpUserData: User = await this.authService.ModelDateofBirth(userData);
+      const signUpUserData: User = await this.authService.ModelDateofBirth(userData);
       delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
@@ -83,14 +83,14 @@ class AuthController {
       let back = false;
       if (req?.files != null) {
         if (req?.files?.passport_front != null && req?.files?.passport_front.length > 0) {
-          let obj = req?.files?.passport_front[0];
+          const obj = req?.files?.passport_front[0];
           if (obj?.path != null && obj?.path != '') {
             userData.passport_front = obj?.path;
             front = true;
           }
         }
         if (req?.files?.passport_back != null && req?.files?.passport_back.length > 0) {
-          let obj = req?.files?.passport_back[0];
+          const obj = req?.files?.passport_back[0];
           if (obj?.path != null && obj?.path != '') {
             userData.passport_back = obj?.path;
             back = true;
@@ -99,7 +99,7 @@ class AuthController {
       }
 
       if (front == true && back == true) {
-        let signUpUserData: User = await this.authService.ModelPassPort(userData);
+        const signUpUserData: User = await this.authService.ModelPassPort(userData);
         delete signUpUserData.password;
         res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
       } else {
@@ -120,7 +120,7 @@ class AuthController {
       if (user == null) {
         throw new HttpException(404, `User not found.`);
       }
-      let photos: string[] = [];
+      const photos: string[] = [];
       if (req?.files != null && req?.files.length > 0) {
         for (let i = 0; i < req?.files.length; i++) {
           const obj = req?.files[i];
@@ -129,7 +129,7 @@ class AuthController {
           }
         }
         userData.photos = photos;
-        let signUpUserData: User = await this.authService.ModelPhotos(userData);
+        const signUpUserData: User = await this.authService.ModelPhotos(userData);
         delete signUpUserData.password;
         res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
       } else {
@@ -190,7 +190,7 @@ class AuthController {
         throw new HttpException(404, `User not found.`);
       }
 
-      let signUpUserData: User = await this.authService.FanPassword(userData);
+      const signUpUserData: User = await this.authService.FanPassword(userData);
 
       delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
@@ -203,7 +203,7 @@ class AuthController {
   public FanDateofBirth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: FanDateofBirthDto = req.body;
-      let signUpUserData: User = await this.authService.FanDateofBirth(userData);
+      const signUpUserData: User = await this.authService.FanDateofBirth(userData);
       delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
@@ -215,7 +215,7 @@ class AuthController {
   public FanGender = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: FanGenderDto = req.body;
-      let signUpUserData: User = await this.authService.FanGender(userData);
+      const signUpUserData: User = await this.authService.FanGender(userData);
       delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
@@ -227,7 +227,7 @@ class AuthController {
   public FanLocation = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: FanLocationDto = req.body;
-      let signUpUserData: User = await this.authService.FanLocation(userData);
+      const signUpUserData: User = await this.authService.FanLocation(userData);
       delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {

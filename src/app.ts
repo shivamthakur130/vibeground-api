@@ -13,7 +13,7 @@ import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
-import  bodyParser    from 'body-parser';
+import bodyParser from 'body-parser';
 class App {
   public app: express.Application;
   public env: string;
@@ -64,6 +64,7 @@ class App {
   }
 
   private initializeMiddlewares() {
+    console.log(ORIGIN + ' ' + CREDENTIALS);
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(hpp());
