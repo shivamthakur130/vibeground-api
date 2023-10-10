@@ -24,8 +24,26 @@ const PlanSchema: Schema = new Schema({
     trim: true,
   },
   features: {
-    type: [String],
+    image: {
+      type: Boolean,
+      default: false,
+    },
+    video: {
+      type: Boolean,
+      default: false,
+    },
+    swipeModel: {
+      type: Boolean,
+      default: false,
+    },
   },
+  recommended: {
+    type: Boolean,
+    default: false,
+  },
+  /*  features: {
+    type: [String],
+  }, */
 });
 
 const planModel = model<Plan & Document>('Plan', PlanSchema);

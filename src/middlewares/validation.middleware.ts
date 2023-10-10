@@ -11,17 +11,18 @@ const validationMiddleware = (
   forbidNonWhitelisted = true,
 ): RequestHandler => {
   return (req, res, next) => {
-    console.log(req.params, 'params');
+    /*console.log(req.params, 'params');
     console.log(req.body, 'body');
     console.log(req.query, 'query');
-
-    validate(plainToClass(type, req[value]), { skipMissingProperties, whitelist, forbidNonWhitelisted }).then((errors: ValidationError[]) => {
+*/
+    validate(plainToClass(type, req[value]), { skipMissingProperties, whitelist, forbidNonWhitelisted }).then((errors: ValidationError[]) => {      
       if (errors.length > 0) {
         const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
         next(new HttpException(400, message));
       } else {
         next();
       }
+
     });
   };
 };
