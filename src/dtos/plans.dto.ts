@@ -1,13 +1,13 @@
-import {  IsString } from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 
 export class CreatePlansDto {
   @IsString()
   public name: string;
 
-  @IsString()
+  @IsNumber()
   public price: string;
 
-  @IsString()
+  @IsNumber()
   public duration: string;
 
   @IsString()

@@ -1,8 +1,8 @@
 export interface Plan {
   _id: string;
   name: string;
-  price: string;
-  duration: string;
+  price: number;
+  duration: number;
   description: string;
   features: string;
 }

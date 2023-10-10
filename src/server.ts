@@ -3,10 +3,11 @@ import AuthRoute from '@routes/auth.route';
 import IndexRoute from '@routes/index.route';
 import UsersRoute from '@routes/users.route';
 import PlanRoute from '@routes/plan.route';
+import TransactionRoute from '@routes/transaction.route';
 import validateEnv from '@utils/validateEnv';
 
 validateEnv();
 
-const app = new App([new IndexRoute(), new UsersRoute(), new AuthRoute(), new PlanRoute()]);
+const app = new App([new IndexRoute(), new UsersRoute(), new AuthRoute(), new PlanRoute(), new TransactionRoute()]);
 
 app.listen();

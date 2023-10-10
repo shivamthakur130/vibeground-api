@@ -12,11 +12,11 @@ const PlanSchema: Schema = new Schema({
     trim: true,
   },
   price: {
-    type: String,
+    type: Number,
     trim: true,
   },
   duration: {
-    type: String,
+    type: Number,
     trim: true,
   },
   description: {
