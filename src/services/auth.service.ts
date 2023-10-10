@@ -179,7 +179,7 @@ class AuthService {
       },
     );
 
-    let findUserT: any = await this.users.findOne({ _id: userData.userId });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
 
     const tokenData = this.createToken(findUserT);
     findUserT._doc.token = tokenData.token;
@@ -187,7 +187,6 @@ class AuthService {
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
       findUserT._doc.date_of_birth = dob;
-      
     }
     return findUserT;
   }
@@ -282,7 +281,7 @@ class AuthService {
   public async login(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
-    let findUser: any = await this.users.findOne({ email: userData.email, type: userData.type });
+    const findUser: any = await this.users.findOne({ email: userData.email, type: userData.type });
 
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
 
@@ -304,6 +303,12 @@ class AuthService {
 
     const findUser: User = await this.users.findOne({ email: userData.email, password: userData.password });
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+
+    return findUser;
+  }
+  public async me(userId: string): Promise<User> {
+    const findUser: User = await this.users.findOne({ _id: userId });
+    if (!findUser) throw new HttpException(409, `This user not found`);
 
     return findUser;
   }

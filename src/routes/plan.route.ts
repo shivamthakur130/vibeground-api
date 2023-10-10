@@ -17,7 +17,7 @@ class PlanRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/:type`, validationMiddleware(GetPlansDto, 'params'), this.plansController.getPlans);
-   this.router.post(`${this.path}/create`, validationMiddleware(CreatePlansDto, 'body'), this.plansController.create);
+    this.router.post(`${this.path}/create`, validationMiddleware(CreatePlansDto, 'body'), this.plansController.create);
   }
 }
 

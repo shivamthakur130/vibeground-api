@@ -1,4 +1,5 @@
 import { IsString, IsNumber, IsBoolean, IsObject } from 'class-validator';
+// import { IsString } from 'class-validator';
 
 export class CreatePlansDto {
   @IsString()
