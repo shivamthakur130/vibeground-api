@@ -18,7 +18,7 @@ class TransactionService {
     if (isEmpty(planid)) throw new HttpException(400, 'Plan is required.');
     if (isEmpty(userid)) throw new HttpException(400, 'User is required.');
 
-    const createData: Transaction = await this.transaction.create({ userid: userid, planid: planid });
+    const createData: Transaction = await this.transaction.create({ userId: userid, planId: planid });
     return createData;
   }
 }

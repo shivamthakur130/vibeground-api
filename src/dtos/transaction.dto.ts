@@ -2,10 +2,13 @@ import { IsString, IsOptional } from 'class-validator';
 
 export class CreateTransactionDto {
   @IsString()
-  public userid: string;
+  public userId: string;
 
   @IsString()
-  public planid: string;
+  public planId: string;
+
+  @IsString()
+  public subscriptionId: string;
 
   @IsString()
   @IsOptional()
@@ -13,7 +16,11 @@ export class CreateTransactionDto {
 
   @IsString()
   @IsOptional()
-  public status: string;
+  public address: string;
+
+  @IsString()
+  @IsOptional()
+  public cardname: string;
 }
 
 export class GetPlansDto {

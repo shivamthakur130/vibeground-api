@@ -33,15 +33,18 @@ class SubscriptionController {
       if (req.body?.subscriptionId != null && req.body?.subscriptionId != "") {
         // update subscription
         // find subscription
-        const subscriptionData: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
+        const subscriptionDataGet: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
 
-        if (subscriptionData == null) {
+        if (subscriptionDataGet == null) {
           throw new HttpException(404, `Subscription not found.`);
         }
           if (req.body?.status == 'active') {
           
-            let duration  = subscriptionData?._doc?.planId?.duration != null ? subscriptionData?._doc?.planId?.duration : 0;
-            const subData: Subscription = await this.subscriptionService.update(req.body?.subscriptionId, req.body?.status, duration);
+            let duration = subscriptionDataGet?._doc?.planId?.duration != null ? subscriptionDataGet?._doc?.planId?.duration : 0;
+            const subData: Subscription = await this.subscriptionService.update(
+              duration,
+              subscriptionData,
+            );
             res.status(201).json({ data: subData, message: 'subscription updated', status: true });
           }
       }  else {

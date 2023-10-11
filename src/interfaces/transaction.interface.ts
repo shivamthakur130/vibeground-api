@@ -1,7 +1,9 @@
 export interface Transaction {
   _id: string;
-  userid: string;
-  planid: string;
+  userId: string;
+  planId: string;
+  subscriptionId: string;
   response: string;
-  status: string;
+  address: string;
+  cardname: string;
 }

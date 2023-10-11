@@ -2,16 +2,20 @@ import { model, Schema, Document } from 'mongoose';
 import { Transaction } from '@interfaces/transaction.interface';
 
 const TransactionSchema: Schema = new Schema({
-  userid: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  planid: { type: Schema.Types.ObjectId, ref: 'Plan', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  planId: { type: Schema.Types.ObjectId, ref: 'Plan', required: true },
+  subscriptionId: { type: Schema.Types.ObjectId, ref: 'Subscription', required: true },
   response: {
     type: String,
     trim: true,
   },
-  status: {
+  address: {
     type: String,
-    enum: ['init', 'error', 'success'],
-    default: 'init',
+    trim: true,
+  },
+  cardname: {
+    type: String,
+    trim: true,
   },
 });
 

@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsObject } from 'class-validator';
 
 export class CreateSubscriptionDto {
   @IsString()
@@ -32,6 +32,18 @@ export class MakeSubscriptionDto {
   @IsString()
   @IsOptional()
   public status: string;
+
+  @IsObject()
+  @IsOptional()
+  public response: Object;
+
+  @IsString()
+  @IsOptional()
+  public address: string;
+
+  @IsString()
+  @IsOptional()
+  public cardname: string;
 
   @IsString()
   @IsOptional()
