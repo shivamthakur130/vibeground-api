@@ -71,6 +71,8 @@ class SubscriptionService {
         userId: createData._doc.userId.toString(),
         planId: createData._doc.planId.toString(),
         subscriptionId: createData._doc._id.toString(),
+        created_at: moment(),
+        updated_at: moment(),
       };
 
       if (subscriptionData?.address != null && subscriptionData?.address != "") {

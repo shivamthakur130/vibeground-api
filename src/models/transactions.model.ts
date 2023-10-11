@@ -17,6 +17,8 @@ const TransactionSchema: Schema = new Schema({
     type: String,
     trim: true,
   },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
 });
 
 const TransactionModel = model<Transaction & Document>('Transaction', TransactionSchema);
