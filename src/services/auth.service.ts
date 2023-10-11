@@ -18,12 +18,15 @@ import {
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
+import { Subscription } from '@interfaces/subscription.interface';
 import userModel from '@models/users.model';
+import SubscriptionModel from '@models/subscriptions.model';
 import { isEmpty } from '@utils/util';
 import moment from 'moment';
 
 class AuthService {
   public users = userModel;
+  public subscriptions = SubscriptionModel;
 
   //Model
   //**--- Step 1 */
@@ -286,6 +289,7 @@ class AuthService {
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
 
     const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
+
     if (!isPasswordMatching) throw new HttpException(409, 'Password is not matching');
 
     const tokenData = this.createToken(findUser);
@@ -295,7 +299,38 @@ class AuthService {
       const dob = moment(findUser._doc.date_of_birth).format('DD-MM-YYYY');
       findUser._doc.date_of_birth = dob;
     }
+    let subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
+    findUser._doc.subscription = subscription;
     return findUser;
+  }
+
+  public async getUserSubscription(userid: string): Promise<any> {
+    await this.expirySubscriptinCheck(userid);
+    const latest: any = await this.subscriptions.findOne({userId: userid, status: 'active'}).populate("planId");
+    return latest;
+  }
+
+  public async expirySubscriptinCheck(userid: string): Promise<Boolean> {
+    
+    const allSub: Subscription[] = await this.subscriptions.find({userId: userid, status: 'active'});
+
+    for(let i=0;i<allSub.length;i++) {
+      const subscr = allSub[i];
+
+      const expdate = moment(subscr.expirydate);
+      const cudate = moment();
+      if(expdate.diff(cudate) < 0) {
+        // update status;
+        const up = await this.subscriptions.findOneAndUpdate(
+          { _id: subscr._id },
+          {
+            $set: {
+              status: 'expired',
+            },
+          });
+    }
+    }
+    return true;
   }
 
   public async logout(userData: User): Promise<User> {
@@ -307,9 +342,10 @@ class AuthService {
     return findUser;
   }
   public async me(userId: string): Promise<User> {
-    const findUser: User = await this.users.findOne({ _id: userId });
+    let findUser: any = await this.users.findOne({ _id: userId });
     if (!findUser) throw new HttpException(409, `This user not found`);
-
+    let subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
+    findUser._doc.subscription = subscription;
     return findUser;
   }
 

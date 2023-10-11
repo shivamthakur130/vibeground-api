@@ -3,5 +3,6 @@ export interface Subscription {
   userid: string;
   planid: string;
   response: string;
-  status: string;
+  purchasedate: Date;
+  expirydate: Date;
 }

@@ -26,5 +26,14 @@ export class MakeSubscriptionDto {
   // public userId: string;
 
   @IsString()
+  @IsOptional()
+  public subscriptionId: string;
+
+  @IsString()
+  @IsOptional()
+  public status: string;
+
+  @IsString()
+  @IsOptional()
   public planId: string;
 }
