@@ -5,7 +5,7 @@ import {
   FanEmailDto,
   FanDetailsDto,
   FanPasswordDto,
-  FanDateofBirthDto,
+  FanDateOfBirthDto,
   FanGenderDto,
   FanLocationDto,
   ModelDetailsDto,
@@ -50,8 +50,8 @@ class AuthRoute implements Routes {
     // Fan
     this.router.post(`${this.path}fan/email`, validationMiddleware(FanEmailDto, 'body'), this.authController.FanEmail);
     this.router.post(`${this.path}fan/details`, validationMiddleware(FanDetailsDto, 'body'), this.authController.FanDetails);
-    this.router.post(`${this.path}fan/password`, validationMiddleware(FanPasswordDto, 'body'), this.authController.FanPasword);
-    this.router.post(`${this.path}fan/dob`, authMiddleware, validationMiddleware(FanDateofBirthDto, 'body'), this.authController.FanDateofBirth);
+    this.router.post(`${this.path}fan/password`, validationMiddleware(FanPasswordDto, 'body'), this.authController.FanPassword);
+    this.router.post(`${this.path}fan/dob`, authMiddleware, validationMiddleware(FanDateOfBirthDto, 'body'), this.authController.FanDateOfBirth);
     this.router.post(`${this.path}fan/gender`, authMiddleware, validationMiddleware(FanGenderDto, 'body'), this.authController.FanGender);
     this.router.post(`${this.path}fan/location`, authMiddleware, validationMiddleware(FanLocationDto, 'body'), this.authController.FanLocation);
 

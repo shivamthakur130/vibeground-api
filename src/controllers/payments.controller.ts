@@ -24,7 +24,7 @@ class PaymentsController {
       const findPlan: Plan = await this.paymentService.findPlan(planData.planid, findUser.type);
 
       if (findPlan == null) throw new HttpException(404, `Plan not found.`);
-      let stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-08-16' } as Stripe.StripeConfig);
+      const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-08-16' } as Stripe.StripeConfig);
       const myPayment = await stripe.paymentIntents.create({
         amount: findPlan.price,
         currency: 'CHF',
@@ -48,18 +48,18 @@ class PaymentsController {
     }
   };
 
-  public sendStripeApiKey  = async (req: Request, res: Response, next: NextFunction) => {
+  public sendStripeApiKey = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        res.status(200).json({
-          data: {
-            api_key: STRIPE_API_KEY,
-          },
-          message: 'Api key Get Successfully',
-        });
+      res.status(200).json({
+        data: {
+          api_key: STRIPE_API_KEY,
+        },
+        message: 'Api key Get Successfully',
+      });
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
 
 export default PaymentsController;

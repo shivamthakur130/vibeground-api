@@ -65,7 +65,6 @@ const userSchema: Schema = new Schema({
   passport_back: {
     type: String,
   },
-  
   photos: {
     type: [String],
   },

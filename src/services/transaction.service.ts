@@ -1,7 +1,7 @@
 import { HttpException } from '@exceptions/HttpException';
-import {  Transaction } from '@interfaces/transaction.interface';
+import { Transaction } from '@interfaces/transaction.interface';
 import { Plan } from '@interfaces/plan.interface';
-import TransactionModel from '@models/transaction.model';
+import TransactionModel from '@/models/transactions.model';
 import PlanModel from '@models/plans.model';
 import { isEmpty } from '@utils/util';
 

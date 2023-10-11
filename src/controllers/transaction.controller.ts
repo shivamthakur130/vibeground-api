@@ -23,7 +23,6 @@ class TransactionController {
       next(error);
     }
   };
-
 }
 
 export default TransactionController;

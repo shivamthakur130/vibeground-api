@@ -6,7 +6,7 @@ import {
   FanEmailDto,
   FanDetailsDto,
   FanPasswordDto,
-  FanDateofBirthDto,
+  FanDateOfBirthDto,
   FanGenderDto,
   FanLocationDto,
   ModelDetailsDto,
@@ -191,7 +191,7 @@ class AuthService {
     return findUserT;
   }
   //**--- Step 4 */
-  public async FanDateofBirth(userData: FanDateofBirthDto): Promise<User> {
+  public async FanDateofBirth(userData: FanDateOfBirthDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const date = moment(userData.dob, 'DD-MM-YYYY').utcOffset('+05:30');
@@ -316,7 +316,7 @@ class AuthService {
   public createToken(user: User): TokenData {
     const dataStoredInToken: DataStoredInToken = { _id: user._id };
     const secretKey: string = SECRET_KEY;
-    const expiresIn: number = 60 * 60;
+    const expiresIn: number = 60 * 60 * 60;
 
     return { expiresIn, token: sign(dataStoredInToken, secretKey, { expiresIn }) };
   }

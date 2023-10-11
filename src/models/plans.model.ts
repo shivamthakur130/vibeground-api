@@ -25,15 +25,15 @@ const PlanSchema: Schema = new Schema({
   },
   features: {
     image: {
-      type: Boolean,
+      type: String,
       default: false,
     },
     video: {
-      type: Boolean,
+      type: String,
       default: false,
     },
     swipeModel: {
-      type: Boolean,
+      type: String,
       default: false,
     },
   },
@@ -41,9 +41,6 @@ const PlanSchema: Schema = new Schema({
     type: Boolean,
     default: false,
   },
-  /*  features: {
-    type: [String],
-  }, */
 });
 
 const planModel = model<Plan & Document>('Plan', PlanSchema);

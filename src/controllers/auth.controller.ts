@@ -4,7 +4,7 @@ import {
   FanEmailDto,
   FanDetailsDto,
   FanPasswordDto,
-  FanDateofBirthDto,
+  FanDateOfBirthDto,
   FanGenderDto,
   FanLocationDto,
   ModelDetailsDto,
@@ -25,7 +25,7 @@ class AuthController {
   public ModelDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: ModelDetailsDto = req.body;
-      // passwrod validation
+      // password validation
       if (userData.password.length < 8) {
         throw new HttpException(400, `password must be at least 8 characters.`);
       } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%&? "]).*$/)) {
@@ -170,7 +170,7 @@ class AuthController {
   };
 
   //**--- Step - 3 */
-  public FanPasword = async (req: Request, res: Response, next: NextFunction) => {
+  public FanPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: FanPasswordDto = req.body;
 
@@ -198,9 +198,9 @@ class AuthController {
   };
 
   //**--- Step - 4 */
-  public FanDateofBirth = async (req: Request, res: Response, next: NextFunction) => {
+  public FanDateOfBirth = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: FanDateofBirthDto = req.body;
+      const userData: FanDateOfBirthDto = req.body;
       const signUpUserData: User = await this.authService.FanDateofBirth(userData);
       delete signUpUserData.password;
       res.status(201).json({ data: signUpUserData, message: 'signup', status: true });

@@ -41,7 +41,7 @@ export class FanPasswordDto {
   public password: string;
 }
 
-export class FanDateofBirthDto {
+export class FanDateOfBirthDto {
   @IsString()
   public userId: string;
 

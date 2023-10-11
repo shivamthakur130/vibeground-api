@@ -18,7 +18,6 @@ class PlansController {
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const planData: CreatePlansDto = req.body;
-      c;
       const findAllPlans: Plan = await this.planService.createPlan(planData);
       res.status(201).json({ data: findAllPlans, message: 'Plan Created' });
     } catch (error) {
