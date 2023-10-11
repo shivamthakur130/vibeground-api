@@ -24,13 +24,13 @@ class SubscriptionController {
     }
   };
 
-  public makeSubscription = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  public makeSubscription = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const subscriptionData: MakeSubscriptionDto = req.body;
-      console.log(req.user._id.toString(), 'user id');
-      const userId = req.user._id.toString();
+      // console.log(req.user._id.toString(), 'user id');
+      const userId = subscriptionData.userId;
 
-      if (req.body?.subscriptionId != null && req.body?.subscriptionId != "") {
+      if (req.body?.subscriptionId != null && req.body?.subscriptionId != '') {
         // update subscription
         // find subscription
         const subscriptionDataGet: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
@@ -38,19 +38,19 @@ class SubscriptionController {
         if (subscriptionDataGet == null) {
           throw new HttpException(404, `Subscription not found.`);
         }
-          if (req.body?.status == 'active') {
-          
-            let duration = subscriptionDataGet?._doc?.planId?.duration != null ? subscriptionDataGet?._doc?.planId?.duration : 0;
-            const subData: Subscription = await this.subscriptionService.update(
-              duration,
-              subscriptionData,
-            );
-            res.status(201).json({ data: subData, message: 'subscription updated', status: true });
-          }
-      }  else {
+        if (req.body?.status == 'active') {
+          const duration = subscriptionDataGet?._doc?.planId?.duration != null ? subscriptionDataGet?._doc?.planId?.duration : 0;
+          const subData: Subscription = await this.subscriptionService.update(duration, subscriptionData);
+          res.status(201).json({ data: subData, message: 'subscription updated', status: true });
+        }
+      } else {
         const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, userId);
         res.status(201).json({ data: subData, message: 'subscription created', status: true });
       }
+      // // console.log(req.user._id.toString(), 'user id');
+      // // const userId = req.user._id.toString();
+      // const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, subscriptionData.userId);
+      // res.status(201).json({ data: subData, message: 'subscription created', status: true });
     } catch (error) {
       next(error);
     }

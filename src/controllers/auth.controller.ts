@@ -22,9 +22,11 @@ class AuthController {
   public authService = new AuthService();
 
   // Model
+  //**--- Step - 1 */
   public ModelDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: ModelDetailsDto = req.body;
+      console.log('userData', userData);
       // password validation
       if (userData.password.length < 8) {
         throw new HttpException(400, `password must be at least 8 characters.`);
@@ -32,13 +34,13 @@ class AuthController {
         throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters #,$,%,&,!.`);
       }
       const signUpUserData: User = await this.authService.ModelDetails(userData);
-      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+      res.status(201).json({ data: signUpUserData, message: 'Model details updated successfully.', status: true });
     } catch (error) {
       next(error);
     }
   };
-
-  public ModelAbout = async (req: Request, res: Response, next: NextFunction) => {
+  //**--- Step - 2 */
+  public ModelAbout = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const userData: ModelAboutDto = req.body;
       const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
@@ -52,7 +54,7 @@ class AuthController {
       next(error);
     }
   };
-
+  //**--- Step - 3 */
   public ModelDateOfBirth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: ModelDOBDto = req.body;
@@ -68,7 +70,7 @@ class AuthController {
       next(error);
     }
   };
-
+  //**--- Step - 4 */
   public ModelPassPort = async (req: any, res: Response, next: NextFunction) => {
     try {
       const userData: ModelPassPortDto = req.body;
@@ -109,6 +111,7 @@ class AuthController {
       next(error);
     }
   };
+  //**--- Step - 5 */
   public ModelPhotos = async (req: any, res: Response, next: NextFunction) => {
     try {
       const userData: ModelPhotosDto = req.body;

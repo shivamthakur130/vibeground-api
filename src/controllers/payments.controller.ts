@@ -26,7 +26,7 @@ class PaymentsController {
       if (findPlan == null) throw new HttpException(404, `Plan not found.`);
       const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-08-16' } as Stripe.StripeConfig);
       const myPayment = await stripe.paymentIntents.create({
-        amount: findPlan.price,
+        amount: findPlan.price * 100,
         currency: 'CHF',
         metadata: {
           company: 'Vibe Ground!',
@@ -34,7 +34,7 @@ class PaymentsController {
         // automatic_payment_methods: {
         //   enabled: true,
         // },
-        // payment_method_types: ['card'],
+        payment_method_types: ['card'],
         // payment_method_types: ['card', 'google_pay', 'apple_pay', 'sepa_debit'],
       });
       res.status(200).json({

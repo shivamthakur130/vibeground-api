@@ -11,13 +11,13 @@ class PlanRoute implements Routes {
   public plansController = new PlansController();
 
   constructor() {
-    this.router.use(authMiddleware);
+    // this.router.use(authMiddleware);
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
     this.router.get(`${this.path}/:type`, validationMiddleware(GetPlansDto, 'params'), this.plansController.getPlans);
-    this.router.post(`${this.path}/create`, validationMiddleware(CreatePlansDto, 'body'), this.plansController.create);
+    this.router.post(`${this.path}/create`, authMiddleware, validationMiddleware(CreatePlansDto, 'body'), this.plansController.create);
   }
 }
 

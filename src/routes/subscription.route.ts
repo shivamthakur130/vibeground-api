@@ -12,7 +12,7 @@ class SubscriptionRoute implements Routes {
   public subscriptionController = new SubscriptionController();
 
   constructor() {
-    this.router.use(authMiddleware);
+    // this.router.use(authMiddleware);
     this.initializeRoutes();
   }
 

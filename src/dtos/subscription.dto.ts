@@ -22,8 +22,8 @@ export class GetPlansDto {
 }
 
 export class MakeSubscriptionDto {
-  // @IsString()
-  // public userId: string;
+  @IsString()
+  public userId: string;
 
   @IsString()
   @IsOptional()
