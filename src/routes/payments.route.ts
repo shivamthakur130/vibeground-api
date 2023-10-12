@@ -17,7 +17,8 @@ class PaymentsRoute implements Routes {
   private initializeRoutes() {
     this.router.post(
       `${this.path}/processPayment`,
-      authMiddleware,validationMiddleware(ProcessPaymentDto, 'body'),
+      authMiddleware,
+      validationMiddleware(ProcessPaymentDto, 'body'),
       this.paymentController.processPayment,
     );
     this.router.get(`${this.path}/sendStripeApiKey`, authMiddleware, this.paymentController.sendStripeApiKey);

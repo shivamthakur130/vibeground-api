@@ -24,7 +24,6 @@ class SubscriptionController {
   };
 
   public makeSubscription = async (req: Request, res: Response, next: NextFunction) => {
-    next(new HttpException(404, `Plan not found.`));
     try {
       const subscriptionData: MakeSubscriptionDto = req.body;
       // console.log(req.user._id.toString(), 'user id');
@@ -45,10 +44,6 @@ class SubscriptionController {
         const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, userId);
         res.status(201).json({ data: subData, message: 'subscription created', status: true });
       }
-      // console.log(req.user._id.toString(), 'user id');
-      // const userId = req.user._id.toString();
-      // const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, subscriptionData.userId);
-      // res.status(201).json({ data: subData, message: 'subscription created', status: true });
     } catch (error) {
       next(error);
     }
