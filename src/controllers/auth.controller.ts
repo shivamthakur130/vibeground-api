@@ -12,6 +12,7 @@ import {
   ModelPassPortDto,
   ModelDOBDto,
   ModelPhotosDto,
+  ModelVideoDto,
 } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
@@ -131,6 +132,35 @@ class AuthController {
         }
         userData.photos = photos;
         const signUpUserData: User = await this.authService.ModelPhotos(userData);
+        delete signUpUserData.password;
+        res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+      } else {
+        throw new HttpException(404, `Atleast one image is required.`);
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+  //**--- Step - 6 */
+  public ModelVideos = async (req: any, res: Response, next: NextFunction) => {
+    try {
+      const userData: ModelVideoDto = req.body;
+
+      const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
+
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+      const videos: string[] = [];
+      if (req?.files != null && req?.files.length > 0) {
+        for (let i = 0; i < req?.files.length; i++) {
+          const obj = req?.files[i];
+          if (obj?.path != null && obj?.path != '') {
+            videos.push(obj?.path);
+          }
+        }
+        userData.videos = videos;
+        const signUpUserData: User = await this.authService.ModelVideos(userData);
         delete signUpUserData.password;
         res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
       } else {

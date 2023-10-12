@@ -13,6 +13,7 @@ import {
   ModelAboutDto,
   ModelDOBDto,
   ModelPhotosDto,
+  ModelVideoDto,
   ModelPassPortDto,
 } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
@@ -121,6 +122,27 @@ class AuthService {
       {
         $set: {
           photos: userData.photos,
+        },
+      },
+    );
+
+    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  }
+  public async ModelVideos(userData: ModelVideoDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    // issue on date
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId, type: 'model' },
+      {
+        $set: {
+          videos: userData.videos,
         },
       },
     );

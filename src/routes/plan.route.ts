@@ -11,7 +11,6 @@ class PlanRoute implements Routes {
   public plansController = new PlansController();
 
   constructor() {
-    // this.router.use(authMiddleware);
     this.initializeRoutes();
   }
 

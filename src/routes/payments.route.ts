@@ -11,13 +11,16 @@ class PaymentsRoute implements Routes {
   public paymentController = new PaymentsController();
 
   constructor() {
-    this.router.use(authMiddleware);
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/processPayment`, validationMiddleware(ProcessPaymentDto, 'body'), this.paymentController.processPayment);
-    this.router.get(`${this.path}/sendStripeApiKey`, this.paymentController.sendStripeApiKey);
+    this.router.post(
+      `${this.path}/processPayment`,
+      authMiddleware,validationMiddleware(ProcessPaymentDto, 'body'),
+      this.paymentController.processPayment,
+    );
+    this.router.get(`${this.path}/sendStripeApiKey`, authMiddleware, this.paymentController.sendStripeApiKey);
   }
 }
 

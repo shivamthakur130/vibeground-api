@@ -14,4 +14,6 @@ export interface User {
   passport_back: string;
   passport_front: string;
   isEmailVerified: boolean;
+  videos: string[];
+  photos: string[];
 }

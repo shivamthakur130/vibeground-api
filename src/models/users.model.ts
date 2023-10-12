@@ -68,7 +68,9 @@ const userSchema: Schema = new Schema({
   photos: {
     type: [String],
   },
-
+  videos: {
+    type: [String],
+  },
   status: {
     type: String,
     enum: ['active', 'inactive'],

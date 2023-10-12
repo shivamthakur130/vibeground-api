@@ -126,3 +126,12 @@ export class ModelPhotosDto {
   @IsOptional()
   public photos: string[];
 }
+
+export class ModelVideoDto {
+  @IsString()
+  public userId: string;
+
+  @IsArray()
+  @IsOptional()
+  public videos: string[];
+}

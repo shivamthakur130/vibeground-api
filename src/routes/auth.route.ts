@@ -13,6 +13,7 @@ import {
   ModelPhotosDto,
   ModelDOBDto,
   ModelPassPortDto,
+  ModelVideoDto,
 } from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
 import authMiddleware from '@middlewares/auth.middleware';
@@ -21,7 +22,7 @@ import { cloudinary } from '@utils/cloudinary';
 import multer from 'multer';
 import { CloudinaryStorage, Options } from 'multer-storage-cloudinary';
 
-import { CLOUDINARY_IMAGE_FOLDER } from '@config';
+import { CLOUDINARY_IMAGE_FOLDER, CLOUDINARY_VIDEO_FOLDER } from '@config';
 
 class AuthRoute implements Routes {
   public path = '/';
@@ -39,6 +40,25 @@ class AuthRoute implements Routes {
         cb(null, true);
       } else {
         cb('Not an image! Please upload only images.', false);
+      }
+    },
+  });
+  public uploadVideo = multer({
+    storage: new CloudinaryStorage({
+      cloudinary: cloudinary,
+      limits: {
+        fieldSize: 1000 * 1024 * 1024, // 1 GB
+      },
+      params: {
+        folder: CLOUDINARY_VIDEO_FOLDER,
+        resource_type:'video'
+      },
+    } as Options),
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype.startsWith('video')) {
+        cb(null, true);
+      } else {
+        cb('Not an video! Please upload only videos.', false);
       }
     },
   });
@@ -74,6 +94,13 @@ class AuthRoute implements Routes {
       this.upload.any('photos'),
       validationMiddleware(ModelPhotosDto, 'body'),
       this.authController.ModelPhotos,
+    );
+
+    this.router.post(
+      `${this.path}model/videos`,
+      this.uploadVideo.any('videos'),
+      validationMiddleware(ModelVideoDto, 'body'),
+      this.authController.ModelVideos,
     );
 
     // other
