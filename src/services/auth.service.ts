@@ -1,3 +1,4 @@
+
 import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
@@ -5,10 +6,12 @@ import {
   CreateUserDto,
   FanEmailDto,
   FanDetailsDto,
+  ModelLinksDto,
   FanPasswordDto,
   FanDateOfBirthDto,
   FanGenderDto,
   FanLocationDto,
+  ModelCategoriesDto,
   ModelDetailsDto,
   ModelAboutDto,
   ModelDOBDto,
@@ -143,6 +146,48 @@ class AuthService {
       {
         $set: {
           videos: userData.videos,
+        },
+      },
+    );
+
+    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  }
+  public async ModelLinks(userData: ModelLinksDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    // issue on date
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId, type: 'model' },
+      {
+        $set: {
+          links: userData.links,
+        },
+      },
+    );
+
+    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  }
+  public async ModelCategories(userData: ModelCategoriesDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    // issue on date
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId, type: 'model' },
+      {
+        $set: {
+          categories: userData.categories,
         },
       },
     );
@@ -328,20 +373,19 @@ class AuthService {
 
   public async getUserSubscription(userid: string): Promise<any> {
     await this.expirySubscriptinCheck(userid);
-    const latest: any = await this.subscriptions.findOne({userId: userid, status: 'active'}).populate("planId");
+    const latest: any = await this.subscriptions.findOne({ userId: userid, status: 'active' }).populate('planId');
     return latest;
   }
 
   public async expirySubscriptinCheck(userid: string): Promise<Boolean> {
-    
-    const allSub: Subscription[] = await this.subscriptions.find({userId: userid, status: 'active'});
+    const allSub: Subscription[] = await this.subscriptions.find({ userId: userid, status: 'active' });
 
-    for(let i=0;i<allSub.length;i++) {
+    for (let i = 0; i < allSub.length; i++) {
       const subscr = allSub[i];
 
       const expdate = moment(subscr.expirydate);
       const cudate = moment();
-      if(expdate.diff(cudate) < 0) {
+      if (expdate.diff(cudate) < 0) {
         // update status;
         const up = await this.subscriptions.findOneAndUpdate(
           { _id: subscr._id },
@@ -349,8 +393,9 @@ class AuthService {
             $set: {
               status: 'expired',
             },
-          });
-    }
+          },
+        );
+      }
     }
     return true;
   }

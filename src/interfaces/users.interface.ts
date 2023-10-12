@@ -16,4 +16,6 @@ export interface User {
   isEmailVerified: boolean;
   videos: string[];
   photos: string[];
+  links: string[];
+  categories: string[];
 }

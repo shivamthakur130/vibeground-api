@@ -11,7 +11,9 @@ import {
   ModelDetailsDto,
   ModelAboutDto,
   ModelPhotosDto,
+  ModelLinksDto,
   ModelDOBDto,
+  ModelCategoriesDto,
   ModelPassPortDto,
   ModelVideoDto,
 } from '@dtos/users.dto';
@@ -102,6 +104,9 @@ class AuthRoute implements Routes {
       validationMiddleware(ModelVideoDto, 'body'),
       this.authController.ModelVideos,
     );
+
+    this.router.post(`${this.path}model/links`, validationMiddleware(ModelLinksDto, 'body'), this.authController.ModelLinks);
+    this.router.post(`${this.path}model/categories`, validationMiddleware(ModelCategoriesDto, 'body'), this.authController.ModelCategories);
 
     // other
     /*  this.router.post(`${this.path}signup`, validationMiddleware(CreateUserDto, 'body'), this.authController.signUp);*/

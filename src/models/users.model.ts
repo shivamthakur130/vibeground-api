@@ -71,6 +71,12 @@ const userSchema: Schema = new Schema({
   videos: {
     type: [String],
   },
+  links: {
+    type: [String],
+  },
+  categories: {
+    type: [String],
+  },
   status: {
     type: String,
     enum: ['active', 'inactive'],

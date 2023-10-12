@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MaxLength, IsOptional, IsArray } from 'class-validator';
+import { IsEmail, IsString, MaxLength, IsOptional, IsArray, ArrayMinSize, ArrayMaxSize, IsUrl } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -134,4 +134,24 @@ export class ModelVideoDto {
   @IsArray()
   @IsOptional()
   public videos: string[];
+}
+
+export class ModelLinksDto {
+  @IsString()
+  public userId: string;
+
+  @IsArray()
+  @ArrayMinSize(3)
+  @ArrayMaxSize(5)
+  //@IsUrl({ each: true, require_protocol: true, require_valid_protocol: true })
+  public links: string[];
+}
+export class ModelCategoriesDto {
+  @IsString()
+  public userId: string;
+
+  @IsArray()
+  @ArrayMinSize(5)
+  @ArrayMaxSize(5)
+  public categories: string[];
 }

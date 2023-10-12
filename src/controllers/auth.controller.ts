@@ -11,7 +11,9 @@ import {
   ModelAboutDto,
   ModelPassPortDto,
   ModelDOBDto,
+  ModelCategoriesDto,
   ModelPhotosDto,
+  ModelLinksDto,
   ModelVideoDto,
 } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
@@ -55,6 +57,7 @@ class AuthController {
       next(error);
     }
   };
+
   //**--- Step - 3 */
   public ModelDateOfBirth = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -166,6 +169,38 @@ class AuthController {
       } else {
         throw new HttpException(404, `Atleast one image is required.`);
       }
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //**--- Step - 7 */
+  public ModelLinks = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userData: ModelLinksDto = req.body;
+      const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
+
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+      const signUpUserData: User = await this.authService.ModelLinks(userData);
+      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //**--- Step - 8 */
+  public ModelCategories = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userData: ModelCategoriesDto = req.body;
+      const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
+
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+      const signUpUserData: User = await this.authService.ModelCategories(userData);
+      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
     } catch (error) {
       next(error);
     }
