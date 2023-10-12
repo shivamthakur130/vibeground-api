@@ -119,13 +119,14 @@ class AuthController {
   public ModelPhotos = async (req: any, res: Response, next: NextFunction) => {
     try {
       const userData: ModelPhotosDto = req.body;
-
       const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
 
       if (user == null) {
         throw new HttpException(404, `User not found.`);
       }
       const photos: string[] = [];
+      const photosExisting: string[] = [];
+
       if (req?.files != null && req?.files.length > 0) {
         for (let i = 0; i < req?.files.length; i++) {
           const obj = req?.files[i];
@@ -133,7 +134,20 @@ class AuthController {
             photos.push(obj?.path);
           }
         }
-        userData.photos = photos;
+        let j = 0;
+        //check if photosExisting has value than add it to new photos array
+        if (userData?.photosExisting != null && userData?.photosExisting.length > 0) {
+          for (let i = 0; i < userData?.photosExisting.length; i++) {
+            const obj = userData?.photosExisting[i];
+            if (obj == 'new') {
+              photosExisting[i] = photos[j];
+              j++;
+            } else if (obj != null && obj != '' && obj != 'new') {
+              photosExisting.push(obj);
+            }
+          }
+        }
+        userData.photos = photosExisting;
         const signUpUserData: User = await this.authService.ModelPhotos(userData);
         delete signUpUserData.password;
         res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
@@ -155,6 +169,7 @@ class AuthController {
         throw new HttpException(404, `User not found.`);
       }
       const videos: string[] = [];
+      const videosExisting: string[] = [];
       if (req?.files != null && req?.files.length > 0) {
         for (let i = 0; i < req?.files.length; i++) {
           const obj = req?.files[i];
@@ -162,7 +177,22 @@ class AuthController {
             videos.push(obj?.path);
           }
         }
-        userData.videos = videos;
+
+        let j = 0;
+        //check if photosExisting has value than add it to new photos array
+        if (userData?.videosExisting != null && userData?.videosExisting.length > 0) {
+          for (let i = 0; i < userData?.videosExisting.length; i++) {
+            const obj = userData?.videosExisting[i];
+            if (obj == 'new') {
+              videosExisting[i] = videos[j];
+              j++;
+            } else if (obj != null && obj != '' && obj != 'new') {
+              videosExisting.push(obj);
+            }
+          }
+        }
+
+        userData.videos = videosExisting;
         const signUpUserData: User = await this.authService.ModelVideos(userData);
         delete signUpUserData.password;
         res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
@@ -339,7 +369,6 @@ class AuthController {
   public me = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const userData: User = req.user;
-      console.log('me', userData);
       const userId = userData._id;
       const findUser = await this.authService.me(userId);
       res.status(200).json({ data: findUser, message: 'me' });

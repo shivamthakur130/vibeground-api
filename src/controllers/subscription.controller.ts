@@ -27,22 +27,28 @@ class SubscriptionController {
     try {
       const subscriptionData: MakeSubscriptionDto = req.body;
       // console.log(req.user._id.toString(), 'user id');
+      //check if user has subscription
       const userId = subscriptionData.userId;
       if (req.body?.subscriptionId != null && req.body?.subscriptionId != '') {
-        // update subscription
-        // find subscription
+        //find subscription update subscription
         const subscriptionDataGet: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
         if (subscriptionDataGet == null) {
           throw new HttpException(404, `Subscription not found.`);
         }
-        if (req.body?.status == 'active') {
+        if (req.body?.status == 'succeeded') {
+          //check the duration is available or not
           const duration = subscriptionDataGet?._doc?.planId?.duration != null ? subscriptionDataGet?._doc?.planId?.duration : 0;
+
+          //fetch the subscription data and update base on data given
           const subData: Subscription = await this.subscriptionService.update(duration, subscriptionData);
-          res.status(201).json({ data: subData, message: 'subscription updated', status: true });
+
+          //return the response
+          res.status(201).json({ data: subData, message: 'subscription saved successfully', status: true });
         }
       } else {
+        // if no subscription create new
         const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, userId);
-        res.status(201).json({ data: subData, message: 'subscription created', status: true });
+        res.status(201).json({ data: subData, message: 'subscription created successfully', status: true });
       }
     } catch (error) {
       next(error);

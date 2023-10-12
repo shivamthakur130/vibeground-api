@@ -125,6 +125,10 @@ export class ModelPhotosDto {
   @IsArray()
   @IsOptional()
   public photos: string[];
+
+  @IsArray()
+  @IsOptional()
+  public photosExisting: string[];
 }
 
 export class ModelVideoDto {
@@ -134,6 +138,10 @@ export class ModelVideoDto {
   @IsArray()
   @IsOptional()
   public videos: string[];
+
+  @IsArray()
+  @IsOptional()
+  public videosExisting: string[];
 }
 
 export class ModelLinksDto {

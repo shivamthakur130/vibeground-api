@@ -9,7 +9,6 @@ const SubscriptionSchema: Schema = new Schema({
     enum: ['active', 'expired', 'suspend', 'inactive'],
     default: 'inactive',
   },
-  response: { type: String, default: null },
   purchase_date: { type: Date, default: null },
   expiry_date: { type: Date, default: null },
   created_at: { type: Date, default: Date.now },

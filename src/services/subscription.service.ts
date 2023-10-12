@@ -19,8 +19,8 @@ class SubscriptionService {
   }
 
   public async create(planId: string, userId: string): Promise<Subscription> {
-    if (isEmpty(planId)) throw new HttpException(400, 'Plan is required.');
-    if (isEmpty(userId)) throw new HttpException(400, 'User is required.');
+    if (isEmpty(planId)) throw new HttpException(400, 'Plan id is required.');
+    if (isEmpty(userId)) throw new HttpException(400, 'User id is required.');
 
     const createData: Subscription = await this.subscription.create({ userId: userId, planId: planId });
     return createData;
@@ -30,58 +30,72 @@ class SubscriptionService {
     return data;
   }
   public async update(duration: any, subscriptionData: MakeSubscriptionDto): Promise<Subscription> {
-    if (isEmpty(subscriptionData)) throw new HttpException(400, 'Subscription is required.');
-    // if (isEmpty(status)) throw new HttpException(400, 'Plan is required.');
-    // if (isEmpty(duration)) throw new HttpException(400, 'Duration is required.');
+    try {
+      if (isEmpty(subscriptionData)) throw new HttpException(400, 'Subscription is required.');
+      if (isEmpty(subscriptionData.planId)) throw new HttpException(400, 'Plan is required.');
+      // if (isEmpty(duration)) throw new HttpException(400, 'Duration is required.');
 
-    const setObject = {};
-    if (subscriptionData?.status != null && subscriptionData?.status != '') {
-      setObject['status'] = subscriptionData?.status;
+      let trans = {};
+      const setObject = {};
 
-      if (subscriptionData?.status == 'active') {
-        if (duration != null) {
-          const purchaseDate = moment();
-          const expiryDate = moment().add(duration, 'months');
-          setObject['purchase_date'] = purchaseDate;
-          setObject['expiry_date'] = expiryDate;
+      //check subscription status available or not  if it's available then update check the payment status is succeeded or not
+      if (subscriptionData?.status != null && subscriptionData?.status != '') {
+        if (subscriptionData?.status == 'succeeded') {
+          console.log(duration, 'duration');
+          setObject['status'] = 'active';
+
+          // update expiry date and purchase date
+          if (duration != null) {
+            const purchaseDate = moment();
+            const expiryDate = moment().add(duration, 'months');
+            setObject['purchase_date'] = purchaseDate;
+            setObject['expiry_date'] = expiryDate;
+          }
         }
       }
-    }
-    if (subscriptionData?.planId != null && subscriptionData?.planId != '') {
-      const getPlan: Plan = await this.plans.findOne({
-        _id: subscriptionData?.planId,
-      });
-      if (getPlan == null) throw new HttpException(400, 'Plan not found.');
-      setObject['planId'] = subscriptionData?.planId;
-    }
-    setObject['updated_at'] = moment();
-    const createData: any = await this.subscription.findOneAndUpdate(
-      { _id: subscriptionData?.subscriptionId },
-      {
-        $set: setObject,
-      },
-    );
-    // create transaction
-    if (subscriptionData?.response != null) {
-      const trans = {
-        response: JSON.stringify(subscriptionData?.response),
-        userId: createData._doc.userId.toString(),
-        planId: createData._doc.planId.toString(),
-        subscriptionId: createData._doc._id.toString(),
-        created_at: moment(),
-        updated_at: moment(),
-      };
-
-      if (subscriptionData?.address != null && subscriptionData?.address != '') {
-        trans['address'] = subscriptionData?.address;
+      // check plan id is available or not
+      if (subscriptionData?.planId != null && subscriptionData?.planId != '') {
+        const getPlan: Plan = await this.plans.findOne({
+          _id: subscriptionData?.planId,
+        });
+        if (getPlan == null) throw new HttpException(400, 'Plan not found.');
+        setObject['planId'] = subscriptionData?.planId;
       }
-      // if (subscriptionData?.cardname != null && subscriptionData?.cardname != '') {
-      //   trans['cardname'] = subscriptionData?.cardname;
-      // }
 
-      await this.transactions.create(trans);
+      //update the updated at and subscription
+      setObject['updated_at'] = moment();
+      const createData: any = await this.subscription.findOneAndUpdate(
+        { _id: subscriptionData?.subscriptionId },
+        {
+          $set: setObject,
+        },
+      );
+
+      console.log('=========================================================================================================');
+      console.log(setObject, 'setObject', createData);
+      console.log('=========================================================================================================');
+      // create transaction and check response is available or not
+      if (subscriptionData?.response != null) {
+        trans = {
+          response: JSON.stringify(subscriptionData?.response),
+          userId: createData._doc.userId.toString(),
+          planId: createData._doc.planId.toString(),
+          subscriptionId: createData._doc._id.toString(),
+          created_at: moment(),
+          updated_at: moment(),
+          status: subscriptionData?.status,
+        };
+
+        if (subscriptionData?.address != null && subscriptionData?.address != '') {
+          trans['address'] = subscriptionData?.address;
+        }
+
+        await this.transactions.create(trans);
+      }
+      return { ...createData._doc, transaction: trans };
+    } catch (e) {
+      throw new HttpException(400, 'Something went wrong. Please try again later.');
     }
-    return createData;
   }
 }
 

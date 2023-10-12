@@ -1,4 +1,3 @@
-
 import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
@@ -43,6 +42,10 @@ class AuthService {
     userData.type = 'model';
     const createUserData: any = await this.users.create({ ...userData });
     delete createUserData._doc.password;
+
+    const tokenData = this.createToken(createUserData);
+    createUserData._doc.token = tokenData.token;
+
     if (createUserData._doc?.date_of_birth != null) {
       const dob = moment(createUserData._doc.date_of_birth).format('DD-MM-YYYY');
       createUserData._doc.date_of_birth = dob;
@@ -137,6 +140,7 @@ class AuthService {
     }
     return findUserT;
   }
+
   public async ModelVideos(userData: ModelVideoDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
@@ -158,6 +162,7 @@ class AuthService {
     }
     return findUserT;
   }
+
   public async ModelLinks(userData: ModelLinksDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
@@ -179,6 +184,7 @@ class AuthService {
     }
     return findUserT;
   }
+
   public async ModelCategories(userData: ModelCategoriesDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
@@ -325,7 +331,6 @@ class AuthService {
   }
 
   // other
-
   public async findUserByIdWithType(userid: String, type: String): Promise<User> {
     const findUser: User = await this.users.findOne({ _id: userid, type: type });
     return findUser;
@@ -366,24 +371,24 @@ class AuthService {
       const dob = moment(findUser._doc.date_of_birth).format('DD-MM-YYYY');
       findUser._doc.date_of_birth = dob;
     }
-    let subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
+    const subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
     findUser._doc.subscription = subscription;
     return findUser;
   }
 
   public async getUserSubscription(userid: string): Promise<any> {
-    await this.expirySubscriptinCheck(userid);
+    await this.expirySubscriptionCheck(userid);
     const latest: any = await this.subscriptions.findOne({ userId: userid, status: 'active' }).populate('planId');
     return latest;
   }
 
-  public async expirySubscriptinCheck(userid: string): Promise<Boolean> {
+  public async expirySubscriptionCheck(userid: string): Promise<Boolean> {
     const allSub: Subscription[] = await this.subscriptions.find({ userId: userid, status: 'active' });
 
     for (let i = 0; i < allSub.length; i++) {
       const subscr = allSub[i];
 
-      const expdate = moment(subscr.expirydate);
+      const expdate = moment(subscr.expiry_date);
       const cudate = moment();
       if (expdate.diff(cudate) < 0) {
         // update status;
@@ -409,9 +414,9 @@ class AuthService {
     return findUser;
   }
   public async me(userId: string): Promise<User> {
-    let findUser: any = await this.users.findOne({ _id: userId });
+    const findUser: any = await this.users.findOne({ _id: userId });
     if (!findUser) throw new HttpException(409, `This user not found`);
-    let subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
+    const subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
     findUser._doc.subscription = subscription;
     return findUser;
   }

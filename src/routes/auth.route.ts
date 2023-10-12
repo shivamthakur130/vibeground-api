@@ -53,7 +53,7 @@ class AuthRoute implements Routes {
       },
       params: {
         folder: CLOUDINARY_VIDEO_FOLDER,
-        resource_type:'video'
+        resource_type: 'video',
       },
     } as Options),
     fileFilter: (req, file, cb) => {
