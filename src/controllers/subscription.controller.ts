@@ -4,7 +4,6 @@ import { Plan } from '@interfaces/plan.interface';
 import { MakeSubscriptionDto } from '@dtos/subscription.dto';
 import SubscriptionService from '@services/subscription.service';
 import { HttpException } from '@exceptions/HttpException';
-import { RequestWithUser } from '@/interfaces/auth.interface';
 
 class SubscriptionController {
   public subscriptionService = new SubscriptionService();
@@ -25,35 +24,34 @@ class SubscriptionController {
   };
 
   public makeSubscription = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const subscriptionData: MakeSubscriptionDto = req.body;
-      // console.log(req.user._id.toString(), 'user id');
-      const userId = subscriptionData.userId;
-
-      if (req.body?.subscriptionId != null && req.body?.subscriptionId != '') {
-        // update subscription
-        // find subscription
-        const subscriptionDataGet: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
-
-        if (subscriptionDataGet == null) {
-          throw new HttpException(404, `Subscription not found.`);
-        }
-        if (req.body?.status == 'active') {
-          const duration = subscriptionDataGet?._doc?.planId?.duration != null ? subscriptionDataGet?._doc?.planId?.duration : 0;
-          const subData: Subscription = await this.subscriptionService.update(duration, subscriptionData);
-          res.status(201).json({ data: subData, message: 'subscription updated', status: true });
-        }
-      } else {
-        const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, userId);
-        res.status(201).json({ data: subData, message: 'subscription created', status: true });
-      }
-      // // console.log(req.user._id.toString(), 'user id');
-      // // const userId = req.user._id.toString();
-      // const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, subscriptionData.userId);
-      // res.status(201).json({ data: subData, message: 'subscription created', status: true });
-    } catch (error) {
-      next(error);
-    }
+    next(new HttpException(404, `Plan not found.`));
+    // try {
+    //   const subscriptionData: MakeSubscriptionDto = req.body;
+    //   // console.log(req.user._id.toString(), 'user id');
+    //   const userId = subscriptionData.userId;
+    //   if (req.body?.subscriptionId != null && req.body?.subscriptionId != '') {
+    //     // update subscription
+    //     // find subscription
+    //     const subscriptionDataGet: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
+    //     if (subscriptionDataGet == null) {
+    //       throw new HttpException(404, `Subscription not found.`);
+    //     }
+    //     if (req.body?.status == 'active') {
+    //       const duration = subscriptionDataGet?._doc?.planId?.duration != null ? subscriptionDataGet?._doc?.planId?.duration : 0;
+    //       const subData: Subscription = await this.subscriptionService.update(duration, subscriptionData);
+    //       res.status(201).json({ data: subData, message: 'subscription updated', status: true });
+    //     }
+    //   } else {
+    //     const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, userId);
+    //     res.status(201).json({ data: subData, message: 'subscription created', status: true });
+    //   }
+    //   // console.log(req.user._id.toString(), 'user id');
+    //   // const userId = req.user._id.toString();
+    //   // const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, subscriptionData.userId);
+    //   // res.status(201).json({ data: subData, message: 'subscription created', status: true });
+    // } catch (error) {
+    //   next(error);
+    // }
   };
 }
 
