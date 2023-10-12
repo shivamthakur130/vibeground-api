@@ -1,8 +1,11 @@
 export interface Subscription {
   _id: string;
-  userid: string;
-  planid: string;
+  userId: string;
+  planId: string;
+  status: string;
   response: string;
-  purchasedate: Date;
-  expirydate: Date;
+  purchase_date: Date;
+  expiry_date: Date;
+  created_at: Date;
+  updated_at: Date;
 }

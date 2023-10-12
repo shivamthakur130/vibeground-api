@@ -8,6 +8,9 @@ export class CreateTransactionDto {
   public planId: string;
 
   @IsString()
+  public status: string;
+
+  @IsString()
   public subscriptionId: string;
 
   @IsString()
@@ -20,10 +23,14 @@ export class CreateTransactionDto {
 
   @IsString()
   @IsOptional()
-  public cardname: string;
+  public paymentIntentId: string;
+
+  // @IsString()
+  // @IsOptional()
+  // public cardname: string;
 }
 
 export class GetPlansDto {
   @IsString()
-  public planid: string;
+  public planId: string;
 }

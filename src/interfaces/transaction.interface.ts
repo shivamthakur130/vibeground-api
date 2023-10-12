@@ -4,6 +4,6 @@ export interface Transaction {
   planId: string;
   subscriptionId: string;
   response: string;
+  status: string;
   address: string;
-  cardname: string;
 }

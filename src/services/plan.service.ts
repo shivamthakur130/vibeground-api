@@ -17,6 +17,15 @@ class PlanService {
     const createData: Plan = await this.plans.create({ ...planData });
     return createData;
   }
+
+  public async findPlanById(planId: string): Promise<Plan> {
+    if (isEmpty(planId)) throw new HttpException(400, 'Invalid planId');
+
+    const findPlan: Plan = await this.plans.findOne({ _id: planId });
+    if (!findPlan) throw new HttpException(409, "Plan doesn't exist");
+
+    return findPlan;
+  }
 }
 
 export default PlanService;

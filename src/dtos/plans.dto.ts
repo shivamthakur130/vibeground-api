@@ -28,3 +28,8 @@ export class GetPlansDto {
   @IsString()
   public type: string;
 }
+
+export class paramIdDto {
+  @IsString()
+  public planId: string;
+}

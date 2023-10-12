@@ -15,7 +15,7 @@ class TransactionRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:planid`, authMiddleware, validationMiddleware(GetPlansDto, 'params'), this.transactionController.getTransaction);
+    this.router.get(`${this.path}/:planId`, authMiddleware, validationMiddleware(GetPlansDto, 'params'), this.transactionController.getTransaction);
   }
 }
 

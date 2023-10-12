@@ -26,6 +26,9 @@ export class MakeSubscriptionDto {
   public userId: string;
 
   @IsString()
+  public planId: string;
+
+  @IsString()
   @IsOptional()
   public subscriptionId: string;
 
@@ -43,9 +46,5 @@ export class MakeSubscriptionDto {
 
   @IsString()
   @IsOptional()
-  public cardname: string;
-
-  @IsString()
-  @IsOptional()
-  public planId: string;
+  public paymentIntentId: string;
 }

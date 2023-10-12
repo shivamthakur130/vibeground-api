@@ -29,28 +29,25 @@ class SubscriptionService {
     const data: any = await this.subscription.findOne({ _id: subscriptionId, userId: userId }).populate('planId');
     return data;
   }
-  public async update(
-    duration: any,
-    subscriptionData: MakeSubscriptionDto,
-  ): Promise<Subscription> {
+  public async update(duration: any, subscriptionData: MakeSubscriptionDto): Promise<Subscription> {
     if (isEmpty(subscriptionData)) throw new HttpException(400, 'Subscription is required.');
     // if (isEmpty(status)) throw new HttpException(400, 'Plan is required.');
     // if (isEmpty(duration)) throw new HttpException(400, 'Duration is required.');
 
-    let setObject = {};
+    const setObject = {};
     if (subscriptionData?.status != null && subscriptionData?.status != '') {
       setObject['status'] = subscriptionData?.status;
 
       if (subscriptionData?.status == 'active') {
         if (duration != null) {
-          let purchaseDate = moment();
-          let expiryDate = moment().add(duration, 'months');
-          setObject['purchasedate'] = purchaseDate;
-          setObject['expirydate'] = expiryDate;
+          const purchaseDate = moment();
+          const expiryDate = moment().add(duration, 'months');
+          setObject['purchase_date'] = purchaseDate;
+          setObject['expiry_date'] = expiryDate;
         }
       }
     }
-    if (subscriptionData?.planId != null && subscriptionData?.planId != "") {
+    if (subscriptionData?.planId != null && subscriptionData?.planId != '') {
       const getPlan: Plan = await this.plans.findOne({
         _id: subscriptionData?.planId,
       });
@@ -64,9 +61,9 @@ class SubscriptionService {
         $set: setObject,
       },
     );
-
-    if (subscriptionData?.response != null)  {
-      let trans = {
+    // create transaction
+    if (subscriptionData?.response != null) {
+      const trans = {
         response: JSON.stringify(subscriptionData?.response),
         userId: createData._doc.userId.toString(),
         planId: createData._doc.planId.toString(),
@@ -75,14 +72,14 @@ class SubscriptionService {
         updated_at: moment(),
       };
 
-      if (subscriptionData?.address != null && subscriptionData?.address != "") {
+      if (subscriptionData?.address != null && subscriptionData?.address != '') {
         trans['address'] = subscriptionData?.address;
-      } 
-      if (subscriptionData?.cardname != null && subscriptionData?.cardname != '') {
-        trans['cardname'] = subscriptionData?.cardname;
-      } 
+      }
+      // if (subscriptionData?.cardname != null && subscriptionData?.cardname != '') {
+      //   trans['cardname'] = subscriptionData?.cardname;
+      // }
 
-      const updateTransaction = await this.transactions.create(trans);
+      await this.transactions.create(trans);
     }
     return createData;
   }

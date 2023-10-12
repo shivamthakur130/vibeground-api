@@ -8,14 +8,22 @@ const TransactionSchema: Schema = new Schema({
   response: {
     type: String,
     trim: true,
+    default: '',
   },
   address: {
     type: String,
     trim: true,
+    default: '',
   },
-  cardname: {
+  status: {
     type: String,
     trim: true,
+    default: '',
+  },
+  paymentIntentId: {
+    type: String,
+    trim: true,
+    default: '',
   },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

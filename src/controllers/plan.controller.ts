@@ -24,6 +24,16 @@ class PlansController {
       next(error);
     }
   };
+
+  public getPlanById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const planId: string = req.params.planId;
+      const findOnePlanData: Plan = await this.planService.findPlanById(planId);
+      res.status(200).json({ data: findOnePlanData, message: 'Plan fetch successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default PlansController;

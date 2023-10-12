@@ -15,7 +15,7 @@ class SubscriptionRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:planId`, validationMiddleware(GetPlansDto, 'params'), this.subscriptionController.getSubscription);
+    this.router.get(`${this.path}/:subscriptionId`, validationMiddleware(GetPlansDto, 'params'), this.subscriptionController.getSubscription);
     //make
     this.router.post(`${this.path}/make`, validationMiddleware(MakeSubscriptionDto, 'body'), this.subscriptionController.makeSubscription);
   }

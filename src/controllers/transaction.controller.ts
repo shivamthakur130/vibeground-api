@@ -11,13 +11,13 @@ class TransactionController {
 
   public getTransaction = async (req: any, res: Response, next: NextFunction) => {
     try {
-      const findPlan: Plan = await this.transactionService.getPlanWithId(req.params.planid, req.user.type);
+      const findPlan: Plan = await this.transactionService.getPlanWithId(req.params.planId, req.user.type);
 
       if (findPlan == null) {
         throw new HttpException(404, `Plan not found.`);
       }
       console.log(req.user._id.toString());
-      const getTransaction: Transaction = await this.transactionService.create(req.params.planid, req.user._id.toString());
+      const getTransaction: Transaction = await this.transactionService.create(req.params.planId, req.user._id.toString());
       res.status(200).json({ data: getTransaction, message: 'Get Transaction Id' });
     } catch (error) {
       next(error);
