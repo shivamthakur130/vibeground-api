@@ -358,7 +358,7 @@ class AuthService {
 
     const findUser: any = await this.users.findOne({ email: userData.email, type: userData.type });
 
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+    if (!findUser) throw new HttpException(409, `Invalid credentials, please try again.`);
 
     const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
 
