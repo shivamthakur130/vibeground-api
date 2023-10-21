@@ -70,8 +70,9 @@ class App {
   private initializeMiddlewares() {
     try {
       console.log(ORIGIN + ' ' + CREDENTIALS);
+      const origin_ = ORIGIN.split(',');
       this.app.use(morgan(LOG_FORMAT, { stream }));
-      this.app.use(cors({ origin: [ORIGIN], credentials: CREDENTIALS }));
+      this.app.use(cors({ origin: origin_, credentials: CREDENTIALS }));
       this.app.use(hpp());
       this.app.use(helmet());
       this.app.use(compression());
