@@ -13,6 +13,7 @@ export const emailConfig = {
       },
     },
     from: process.env.EMAIL_FROM,
+    adminEmail: process.env.ADMIN_EMAIL,
   },
 };
 export const {

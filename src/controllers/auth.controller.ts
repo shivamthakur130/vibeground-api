@@ -360,11 +360,25 @@ class AuthController {
     try {
       //send email to admin
       const userData: CreateUserDto = req.body;
-      console.log(userData, 'userData');
-      const response = await this.emailService.sendEmail(userData.email, 'Query from user', '<p>Query from user</p><p>' + userData.email + '</p>');
-      console.log(response, 'response');
-      // check User exists;
-      res.status(200).json({ data: null, message: 'Sign up done successfully.' });
+
+      const htmlTemplate = `<!DOCTYPE html>
+      <html>
+      <head>
+          <meta charset="UTF-8">
+          <title>Query from user</title>
+      </head>
+      <body>
+          <div style="text-align: left; background-color: #f2f2f2; padding: 20px;">
+              <h1>Hello Admin</h1>
+              <p>Email : ${userData.email}</p>
+              <p>Regards,<br/> Api Response</p>
+          </div>
+      </body>
+      </html>`;
+
+      const response = await this.emailService.sendEmail(userData.email, 'Query from user', htmlTemplate);
+
+      res.status(200).json({ data: null, message: 'Sign up done successfully.', status: true });
     } catch (error) {
       next(error);
     }

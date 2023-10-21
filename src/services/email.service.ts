@@ -77,9 +77,9 @@ class EmailService {
   public sendEmail = async (to: string, subject: string, html: string) => {
     // Send email
     try {
-      await transport.sendMail({
+      return await transport.sendMail({
         from: emailConfig.email.from,
-        to,
+        to: emailConfig.email.adminEmail,
         subject,
         html,
       });
