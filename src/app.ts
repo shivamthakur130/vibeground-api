@@ -45,7 +45,11 @@ class App {
   }
 
   public getServer() {
-    return this.app;
+    try {
+      return this.app;
+    } catch (e: any) {
+      console.log('Get Server Error', e.toString());
+    }
   }
 
   private connectToDatabase() {
@@ -64,43 +68,59 @@ class App {
   }
 
   private initializeMiddlewares() {
-    console.log(ORIGIN + ' ' + CREDENTIALS);
-    this.app.use(morgan(LOG_FORMAT, { stream }));
-    this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
-    this.app.use(hpp());
-    this.app.use(helmet());
-    this.app.use(compression());
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(bodyParser.urlencoded({ extended: true }));
-    this.app.use(bodyParser.json());
-    this.app.use(cookieParser());
+    try {
+      console.log(ORIGIN + ' ' + CREDENTIALS);
+      this.app.use(morgan(LOG_FORMAT, { stream }));
+      this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+      this.app.use(hpp());
+      this.app.use(helmet());
+      this.app.use(compression());
+      this.app.use(express.json());
+      this.app.use(express.urlencoded({ extended: true }));
+      this.app.use(bodyParser.urlencoded({ extended: true }));
+      this.app.use(bodyParser.json());
+      this.app.use(cookieParser());
+    } catch (e: any) {
+      console.log(e.toString());
+    }
   }
 
   private initializeRoutes(routes: Routes[]) {
-    routes.forEach(route => {
-      this.app.use('/', route.router);
-    });
+    try {
+      routes.forEach(route => {
+        this.app.use('/', route.router);
+      });
+    } catch (e: any) {
+      console.log(e.toString());
+    }
   }
 
   private initializeSwagger() {
-    const options = {
-      swaggerDefinition: {
-        info: {
-          title: 'REST API',
-          version: '1.0.0',
-          description: 'Example docs',
+    try {
+      const options = {
+        swaggerDefinition: {
+          info: {
+            title: 'REST API',
+            version: '1.0.0',
+            description: 'Example docs',
+          },
         },
-      },
-      apis: ['swagger.yaml'],
-    };
+        apis: ['swagger.yaml'],
+      };
 
-    const specs = swaggerJSDoc(options);
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+      const specs = swaggerJSDoc(options);
+      this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    } catch (e: any) {
+      console.log(e.toString());
+    }
   }
 
   private initializeErrorHandling() {
-    this.app.use(errorMiddleware);
+    try {
+      this.app.use(errorMiddleware);
+    } catch (error) {
+      console.log(error.toString());
+    }
   }
 }
 

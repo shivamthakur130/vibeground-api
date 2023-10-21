@@ -8,16 +8,19 @@ import SubscriptionRoute from '@routes/subscription.route';
 import PaymentsRoute from '@routes/payments.route';
 import validateEnv from '@utils/validateEnv';
 
-validateEnv();
+try {
+  validateEnv();
+  const app = new App([
+    new IndexRoute(),
+    new UsersRoute(),
+    new AuthRoute(),
+    new PlanRoute(),
+    new TransactionRoute(),
+    new PaymentsRoute(),
+    new SubscriptionRoute(),
+  ]);
 
-const app = new App([
-  new IndexRoute(),
-  new UsersRoute(),
-  new AuthRoute(),
-  new PlanRoute(),
-  new TransactionRoute(),
-  new PaymentsRoute(),
-  new SubscriptionRoute(),
-]);
-
-app.listen();
+  app.listen();
+} catch (e) {
+  console.log(e.toString());
+}

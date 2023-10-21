@@ -10,6 +10,10 @@ export class CreateUserDto {
   @IsString()
   public password: string;
 }
+export class QueryUserDto {
+  @IsEmail()
+  public email: string;
+}
 
 export class FanEmailDto {
   @IsEmail()

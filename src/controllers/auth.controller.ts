@@ -19,10 +19,12 @@ import {
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
+import EmailService from '@services/email.service';
 import { HttpException } from '@exceptions/HttpException';
 
 class AuthController {
   public authService = new AuthService();
+  public emailService = new EmailService();
 
   // Model
   //**--- Step - 1 */
@@ -349,6 +351,20 @@ class AuthController {
       const userData: CreateUserDto = req.body;
       const findUser = await this.authService.login(userData);
       res.status(200).json({ data: findUser, message: 'login' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public query = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //send email to admin
+      const userData: CreateUserDto = req.body;
+      console.log(userData, 'userData');
+      const response = await this.emailService.sendEmail(userData.email, 'Query from user', '<p>Query from user</p><p>' + userData.email + '</p>');
+      console.log(response, 'response');
+      // check User exists;
+      res.status(200).json({ data: null, message: 'Sign up done successfully.' });
     } catch (error) {
       next(error);
     }
