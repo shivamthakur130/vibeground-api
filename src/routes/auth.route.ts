@@ -17,6 +17,7 @@ import {
   ModelPassPortDto,
   ModelVideoDto,
   QueryUserDto,
+  GoogleLogin,
 } from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
 import authMiddleware from '@middlewares/auth.middleware';
@@ -116,6 +117,9 @@ class AuthRoute implements Routes {
       this.router.post(`${this.path}login`, validationMiddleware(CreateUserDto, 'body'), this.authController.logIn);
       this.router.post(`${this.path}logout`, authMiddleware, this.authController.logOut);
       this.router.get(`${this.path}me`, authMiddleware, this.authController.me);
+
+      // login with google
+      this.router.post(`${this.path}google/login`, validationMiddleware(GoogleLogin, 'body'), this.authController.google);
     } catch (e) {
       console.log(e);
     }

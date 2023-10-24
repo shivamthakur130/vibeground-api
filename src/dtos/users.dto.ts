@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MaxLength, IsOptional, IsArray, ArrayMinSize, ArrayMaxSize, IsUrl } from 'class-validator';
+import { IsEmail, IsString, MaxLength, IsOptional, IsArray, ArrayMinSize, ArrayMaxSize, IsUrl, IsNumber } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -9,10 +9,36 @@ export class CreateUserDto {
 
   @IsString()
   public password: string;
+
+  @IsString()
+  @IsOptional()
+  public operation: string;
 }
 export class QueryUserDto {
   @IsEmail()
   public email: string;
+}
+export class GoogleLogin {
+  @IsString()
+  public access_token: string;
+
+  @IsString()
+  public firstName: string;
+
+  @IsString()
+  public lastName: string;
+
+  @IsString()
+  public email: string;
+
+  @IsString()
+  public picture: string;
+
+  @IsString()
+  public provider: string;
+
+  @IsString()
+  public providerId: string;
 }
 
 export class FanEmailDto {
@@ -21,6 +47,10 @@ export class FanEmailDto {
 
   @IsString()
   public type: string;
+
+  @IsString()
+  @IsOptional()
+  public userId: string;
 }
 
 export class FanDetailsDto {
@@ -92,6 +122,10 @@ export class ModelDetailsDto {
 
   @IsString()
   public type: string;
+
+  @IsString()
+  @IsOptional()
+  public userId: string;
 }
 export class ModelAboutDto {
   @IsString()

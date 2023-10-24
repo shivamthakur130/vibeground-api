@@ -3,6 +3,7 @@
         "src",
         ".env"
     ],
+    "err_log": "src/logs/err.log",
     "ext": "js,ts,json",
     "ignore": [
         "src/logs/*",

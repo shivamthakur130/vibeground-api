@@ -15,13 +15,13 @@ import {
   ModelPhotosDto,
   ModelLinksDto,
   ModelVideoDto,
+  GoogleLogin,
 } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
 import EmailService from '@services/email.service';
 import { HttpException } from '@exceptions/HttpException';
-
 class AuthController {
   public authService = new AuthService();
   public emailService = new EmailService();
@@ -49,7 +49,6 @@ class AuthController {
     try {
       const userData: ModelAboutDto = req.body;
       const user: User = await this.authService.findUserByIdWithType(userData.userId, 'model');
-
       if (user == null) {
         throw new HttpException(404, `User not found.`);
       }
@@ -238,8 +237,8 @@ class AuthController {
     }
   };
 
-  // Fan
   //**--- Step - 1 */
+  // Fan
   public FanEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: FanEmailDto = req.body;
@@ -350,6 +349,10 @@ class AuthController {
     try {
       const userData: CreateUserDto = req.body;
       const findUser = await this.authService.login(userData);
+
+      if (findUser == null) {
+        throw new HttpException(404, `User not found.`);
+      }
       res.status(200).json({ data: findUser, message: 'login' });
     } catch (error) {
       next(error);
@@ -384,6 +387,35 @@ class AuthController {
     }
   };
 
+  //google
+  public google = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: GoogleLogin = req.body;
+
+      const user = await this.authService.findUserByGoogleId(userData.providerId);
+      console.log(userData, user);
+      if (user == null) {
+        await this.authService.saveGoogleUser(userData);
+      }
+      // return res.status(200).json({ data: user, message: 'Google Login' });
+      const prepareLogin = {
+        email: userData.email,
+        type: user?.type ?? 'fan',
+        password: userData.providerId,
+        operation: userData.provider,
+      };
+      const findUser = await this.authService.login(prepareLogin);
+
+      if (findUser == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+
+      res.status(200).json({ data: findUser, message: 'Google Login', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const userData: User = req.user;
@@ -406,6 +438,11 @@ class AuthController {
       next(error);
     }
   };
+
+  // public getAuthenticatedClient = async () => {
+  //   const oAuthClient = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_SECRET, 'postmessage');
+
+  // };
 }
 
 export default AuthController;

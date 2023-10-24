@@ -19,6 +19,41 @@ const PlanSchema: Schema = new Schema({
     type: Number,
     trim: true,
   },
+  // "min_pics": 2,
+  min_pics: {
+    type: Number,
+    trim: true,
+  },
+  //   "max_pics": 3,
+  max_pics: {
+    type: Number,
+    trim: true,
+  },
+  //   "min_videos": 2,
+  min_videos: {
+    type: Number,
+    trim: true,
+  },
+  //   "max_videos": 3,
+  max_videos: {
+    type: Number,
+    trim: true,
+  },
+  //   "min_links": 1,
+  min_links: {
+    type: Number,
+    trim: true,
+  },
+  //   "max_links": 5,
+  max_links: {
+    type: Number,
+    trim: true,
+  },
+  planType: {
+    type: String,
+    enum: ['free', 'paid'],
+    default: 'free',
+  },
   description: {
     type: String,
     trim: true,
@@ -26,15 +61,15 @@ const PlanSchema: Schema = new Schema({
   features: {
     image: {
       type: String,
-      default: false,
+      default: 'none',
     },
     video: {
       type: String,
-      default: false,
+      default: 'none',
     },
     swipeModel: {
       type: String,
-      default: false,
+      default: 'none',
     },
   },
   recommended: {

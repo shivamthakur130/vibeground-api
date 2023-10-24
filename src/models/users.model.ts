@@ -82,6 +82,14 @@ const userSchema: Schema = new Schema({
     enum: ['active', 'inactive'],
     default: 'active',
   },
+  provider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local',
+  },
+  providerId: {
+    type: String,
+  },
 
   isEmailVerified: {
     type: Boolean,

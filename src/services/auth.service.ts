@@ -17,6 +17,7 @@ import {
   ModelPhotosDto,
   ModelVideoDto,
   ModelPassPortDto,
+  GoogleLogin,
 } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
@@ -35,17 +36,32 @@ class AuthService {
   //**--- Step 1 */
   public async ModelDetails(userData: ModelDetailsDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
-    const findUser: User = await this.users.findOne({ email: userData.email, type: 'model' });
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+    let findUser: User = null;
+    let createUserData: any = null;
     const hashedPassword = await hash(userData.password, 10);
     userData.password = hashedPassword;
     userData.type = 'model';
-    const createUserData: any = await this.users.create({ ...userData });
-    delete createUserData._doc.password;
+    if (userData?.userId != null && userData?.userId != '') {
+      console.log(userData, 'userData');
+      findUser = await this.users.findOne({ _id: Object(userData.userId), type: 'fan' });
+      if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+      createUserData = await this.users.findOneAndUpdate(
+        { _id: userData.userId },
+        {
+          $set: {
+            ...userData,
+          },
+        },
+      );
+    } else {
+      findUser = await this.users.findOne({ email: userData.email, type: 'model' });
+      if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+      createUserData = await this.users.create({ ...userData });
+    }
 
+    delete createUserData._doc.password;
     const tokenData = this.createToken(createUserData);
     createUserData._doc.token = tokenData.token;
-
     if (createUserData._doc?.date_of_birth != null) {
       const dob = moment(createUserData._doc.date_of_birth).format('DD-MM-YYYY');
       createUserData._doc.date_of_birth = dob;
@@ -215,8 +231,8 @@ class AuthService {
     const findUser: User = await this.users.findOne({ email: userData.email, type: 'fan' });
     userData.type = 'fan';
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
-    const createUserData: User = await this.users.create({ ...userData });
 
+    const createUserData: User = await this.users.create({ ...userData });
     return createUserData;
   }
   //**--- Step 2 */
@@ -341,6 +357,28 @@ class AuthService {
     return findUser;
   }
 
+  public async findUserByGoogleId(providerId: String): Promise<User> {
+    const findUser: User = await this.users.findOne({ providerId: providerId });
+    return findUser;
+  }
+
+  public async saveGoogleUser(userData: GoogleLogin): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    const findUser: User = await this.users.findOne({ email: userData.email });
+    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+
+    const createUserData: User = await this.users.create({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      providerId: userData.providerId,
+      provider: userData.provider,
+    });
+
+    return createUserData;
+  }
+
   public async signup(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
@@ -360,9 +398,10 @@ class AuthService {
 
     if (!findUser) throw new HttpException(409, `Invalid credentials, please try again.`);
 
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
-
-    if (!isPasswordMatching) throw new HttpException(409, 'Password is not matching');
+    if (userData?.operation !== 'google') {
+      const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
+      if (!isPasswordMatching) throw new HttpException(409, 'Password is not matching');
+    }
 
     const tokenData = this.createToken(findUser);
     findUser._doc.token = tokenData.token;

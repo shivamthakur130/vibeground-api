@@ -25,6 +25,27 @@ class PlansController {
     }
   };
 
+  public delete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const planId: string = req.params.planId;
+      const deletePlanData: Plan = await this.planService.deletePlan(planId);
+      res.status(200).json({ data: deletePlanData, message: 'Plan Deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const planId: string = req.params.planId;
+      const planData: CreatePlansDto = req.body;
+      const updatePlanData: Plan = await this.planService.updatePlan(planId, planData);
+      res.status(200).json({ data: updatePlanData, message: 'Plan Updated' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getPlanById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const planId: string = req.params.planId;

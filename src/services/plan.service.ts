@@ -26,6 +26,24 @@ class PlanService {
 
     return findPlan;
   }
+
+  public async deletePlan(planId: string): Promise<Plan> {
+    if (isEmpty(planId)) throw new HttpException(400, 'Invalid planId');
+
+    const deletePlanById: Plan = await this.plans.findByIdAndDelete(planId);
+    if (!deletePlanById) throw new HttpException(409, "Plan doesn't exist");
+
+    return deletePlanById;
+  }
+
+  public async updatePlan(planId: string, planData: CreatePlansDto): Promise<Plan> {
+    if (isEmpty(planData)) throw new HttpException(400, "You're not planData");
+
+    const updatePlanById: Plan = await this.plans.findByIdAndUpdate(planId, { ...planData });
+    if (!updatePlanById) throw new HttpException(409, "Plan doesn't exist");
+
+    return updatePlanById;
+  }
 }
 
 export default PlanService;
