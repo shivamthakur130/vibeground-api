@@ -25,12 +25,14 @@ import { User } from '@interfaces/users.interface';
 import { Subscription } from '@interfaces/subscription.interface';
 import userModel from '@models/users.model';
 import SubscriptionModel from '@models/subscriptions.model';
+import PlanModel from '@models/plans.model';
 import { isEmpty } from '@utils/util';
 import moment from 'moment';
 
 class AuthService {
   public users = userModel;
   public subscriptions = SubscriptionModel;
+  public plans = PlanModel;
 
   //Model
   //**--- Step 1 */
@@ -40,10 +42,10 @@ class AuthService {
     let createUserData: any = null;
     const hashedPassword = await hash(userData.password, 10);
     userData.password = hashedPassword;
-    userData.type = 'model';
+    // userData.type = 'model';
     if (userData?.userId != null && userData?.userId != '') {
       console.log(userData, 'userData');
-      findUser = await this.users.findOne({ _id: Object(userData.userId), type: 'fan' });
+      findUser = await this.users.findOne({ _id: Object(userData.userId) });
       if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
       createUserData = await this.users.findOneAndUpdate(
         { _id: userData.userId },
@@ -54,7 +56,8 @@ class AuthService {
         },
       );
     } else {
-      findUser = await this.users.findOne({ email: userData.email, type: 'model' });
+      // findUser = await this.users.findOne({ email: userData.email, type: 'model' });
+      findUser = await this.users.findOne({ email: userData.email });
       if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
       createUserData = await this.users.create({ ...userData });
     }
@@ -96,7 +99,8 @@ class AuthService {
 
     // issue on date
     const createUserData: User = await this.users.findOneAndUpdate(
-      { _id: userData.userId, type: 'model' },
+      // { _id: userData.userId, type: 'model' },
+      { _id: userData.userId },
       {
         $set: {
           date_of_birth: date,
@@ -104,7 +108,8 @@ class AuthService {
       },
     );
 
-    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    // const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
@@ -118,7 +123,8 @@ class AuthService {
 
     // issue on date
     const createUserData: User = await this.users.findOneAndUpdate(
-      { _id: userData.userId, type: 'model' },
+      // { _id: userData.userId, type: 'model' },
+      { _id: userData.userId },
       {
         $set: {
           passport_front: userData.passport_front,
@@ -127,7 +133,8 @@ class AuthService {
       },
     );
 
-    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    // const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
@@ -140,7 +147,8 @@ class AuthService {
 
     // issue on date
     const createUserData: User = await this.users.findOneAndUpdate(
-      { _id: userData.userId, type: 'model' },
+      // { _id: userData.userId, type: 'model' },
+      { _id: userData.userId },
       {
         $set: {
           photos: userData.photos,
@@ -148,7 +156,8 @@ class AuthService {
       },
     );
 
-    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    // const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
@@ -162,7 +171,8 @@ class AuthService {
 
     // issue on date
     const createUserData: User = await this.users.findOneAndUpdate(
-      { _id: userData.userId, type: 'model' },
+      // { _id: userData.userId, type: 'model' },
+      { _id: userData.userId },
       {
         $set: {
           videos: userData.videos,
@@ -170,7 +180,8 @@ class AuthService {
       },
     );
 
-    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    // const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
@@ -184,7 +195,8 @@ class AuthService {
 
     // issue on date
     const createUserData: User = await this.users.findOneAndUpdate(
-      { _id: userData.userId, type: 'model' },
+      // { _id: userData.userId, type: 'model' },
+      { _id: userData.userId },
       {
         $set: {
           links: userData.links,
@@ -192,7 +204,8 @@ class AuthService {
       },
     );
 
-    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    // const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
@@ -206,7 +219,8 @@ class AuthService {
 
     // issue on date
     const createUserData: User = await this.users.findOneAndUpdate(
-      { _id: userData.userId, type: 'model' },
+      // { _id: userData.userId, type: 'model' },
+      { _id: userData.userId },
       {
         $set: {
           categories: userData.categories,
@@ -214,7 +228,8 @@ class AuthService {
       },
     );
 
-    const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    // const findUserT: any = await this.users.findOne({ _id: userData.userId, type: 'model' });
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
     delete findUserT._doc.password;
     if (findUserT._doc?.date_of_birth != null) {
       const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
@@ -228,8 +243,8 @@ class AuthService {
   public async FanEmail(userData: FanEmailDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
-    const findUser: User = await this.users.findOne({ email: userData.email, type: 'fan' });
-    userData.type = 'fan';
+    const findUser: User = await this.users.findOne({ email: userData.email });
+    // userData.type = 'fan';
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
 
     const createUserData: User = await this.users.create({ ...userData });
@@ -395,6 +410,7 @@ class AuthService {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const findUser: any = await this.users.findOne({ email: userData.email, type: userData.type });
+    // const findUser: any = await this.users.findOne({ email: userData.email });
 
     if (!findUser) throw new HttpException(409, `Invalid credentials, please try again.`);
 
@@ -406,15 +422,26 @@ class AuthService {
     const tokenData = this.createToken(findUser);
     findUser._doc.token = tokenData.token;
     delete findUser._doc.password;
+
     if (findUser._doc?.date_of_birth != null) {
       const dob = moment(findUser._doc.date_of_birth).format('DD-MM-YYYY');
       findUser._doc.date_of_birth = dob;
     }
+
     const subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
     findUser._doc.subscription = subscription;
+
+    //find plan
+    // const plan: any = await this.getUserPlan(findUser._doc._id.toString());
+    // findUser._doc.plan = plan;
+
     return findUser;
   }
 
+  // public async getUserPlan(userid: string): Promise<any> {
+  //   const latest: any = await this.plans.findOne({ userId: userid });
+  //   return latest;
+  // }
   public async getUserSubscription(userid: string): Promise<any> {
     await this.expirySubscriptionCheck(userid);
     const latest: any = await this.subscriptions.findOne({ userId: userid, status: 'active' }).populate('planId');
@@ -452,6 +479,7 @@ class AuthService {
 
     return findUser;
   }
+
   public async me(userId: string): Promise<User> {
     const findUser: any = await this.users.findOne({ _id: userId });
     if (!findUser) throw new HttpException(409, `This user not found`);
@@ -470,6 +498,27 @@ class AuthService {
 
   public createCookie(tokenData: TokenData): string {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+  }
+
+  public async findUserByEmail(email: string): Promise<User> {
+    const findUser: any = await this.users.findOne({ email: email });
+
+    return findUser;
+  }
+
+  public async resetPassword(email: string, password: string): Promise<User> {
+    // const hashedPassword = await hash(userData.password, 10);
+    const hashedPassword = await hash(password, 10);
+    const findUser: any = await this.users.findOneAndUpdate(
+      { email: email },
+      {
+        $set: {
+          password: hashedPassword,
+        },
+      },
+    );
+
+    return findUser;
   }
 }
 

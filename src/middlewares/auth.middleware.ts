@@ -22,7 +22,7 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
         next(new HttpException(401, 'Unauthorized'));
       }
     } else {
-      next(new HttpException(404, 'Unauthorized'));
+      next(new HttpException(401, 'Unauthorized'));
     }
   } catch (error) {
     next(new HttpException(401, 'Unauthorized'));

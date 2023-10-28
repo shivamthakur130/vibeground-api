@@ -36,4 +36,5 @@ export const {
   STRIPE_SECRET_KEY,
   GOOGLE_CLIENT_ID,
   GOOGLE_SECRET,
+  FRONTEND_URL,
 } = process.env;

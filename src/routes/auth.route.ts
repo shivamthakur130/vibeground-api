@@ -5,6 +5,8 @@ import {
   FanEmailDto,
   FanDetailsDto,
   FanPasswordDto,
+  ForgotPasswordEmailDto,
+  ForgotPasswordDto,
   FanDateOfBirthDto,
   FanGenderDto,
   FanLocationDto,
@@ -117,6 +119,10 @@ class AuthRoute implements Routes {
       this.router.post(`${this.path}login`, validationMiddleware(CreateUserDto, 'body'), this.authController.logIn);
       this.router.post(`${this.path}logout`, authMiddleware, this.authController.logOut);
       this.router.get(`${this.path}me`, authMiddleware, this.authController.me);
+
+      this.router.post(`${this.path}forgot-password`, validationMiddleware(ForgotPasswordEmailDto, 'body'), this.authController.forgotPassword);
+
+      this.router.post(`${this.path}reset-password`, validationMiddleware(ForgotPasswordDto, 'body'), this.authController.resetPassword);
 
       // login with google
       this.router.post(`${this.path}google/login`, validationMiddleware(GoogleLogin, 'body'), this.authController.google);

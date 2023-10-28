@@ -79,7 +79,7 @@ class EmailService {
     try {
       return await transport.sendMail({
         from: emailConfig.email.from,
-        to: emailConfig.email.adminEmail,
+        to: to,
         subject,
         html,
       });

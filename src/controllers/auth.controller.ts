@@ -4,6 +4,7 @@ import {
   FanEmailDto,
   FanDetailsDto,
   FanPasswordDto,
+  ForgotPasswordDto,
   FanDateOfBirthDto,
   FanGenderDto,
   FanLocationDto,
@@ -22,6 +23,8 @@ import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
 import EmailService from '@services/email.service';
 import { HttpException } from '@exceptions/HttpException';
+import { FRONTEND_URL } from '@config';
+
 class AuthController {
   public authService = new AuthService();
   public emailService = new EmailService();
@@ -35,8 +38,8 @@ class AuthController {
       // password validation
       if (userData.password.length < 8) {
         throw new HttpException(400, `password must be at least 8 characters.`);
-      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%&? "]).*$/)) {
-        throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters #,$,%,&,!.`);
+      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[@!#$%&? "]).*$/)) {
+        throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters @,#,$,%,&,!.`);
       }
       const signUpUserData: User = await this.authService.ModelDetails(userData);
       res.status(201).json({ data: signUpUserData, message: 'Model details updated successfully.', status: true });
@@ -273,11 +276,11 @@ class AuthController {
     try {
       const userData: FanPasswordDto = req.body;
 
-      // passwrod validation
+      // password validation
       if (userData.password.length < 8) {
         throw new HttpException(400, `password must be at least 8 characters.`);
-      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%&? "]).*$/)) {
-        throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters #,$,%,&,!.`);
+      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[@!#$%&? "]).*$/)) {
+        throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters @,#,$,%,&,!.`);
       }
 
       // check User exists;
@@ -434,6 +437,55 @@ class AuthController {
       const userId = userData._id;
       const findUser = await this.authService.me(userId);
       res.status(200).json({ data: findUser, message: 'me' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //forgotPassword
+  public forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: FanEmailDto = req.body;
+      const user = await this.authService.findUserByEmail(userData.email);
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+      const userId = Buffer.from(user._id).toString('base64');
+
+      const htmlTemplate = `<!DOCTYPE html>
+      <html>
+      <head>
+          <meta charset="UTF-8">
+          <title>Forgot Password</title>
+      </head>
+      <body>
+          <div style="text-align: left; background-color: #f2f2f2; padding: 20px;">
+              <h1>Hello ${user.firstName + ' ' + user.lastName}</h1>
+              <p>Click on the below link to reset your password.</p>
+              <p><a href="${FRONTEND_URL}/login/reset-password/${userId}">Reset Password</a></p>
+              <p>Regards,<br/>
+              VibeGround Team
+              </p>
+          </div>
+      </body>
+      </html>`;
+      const response = await this.emailService.sendEmail(userData.email, 'Forgot Password', htmlTemplate);
+      res.status(200).json({ data: null, message: 'Email sent successfully.', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: ForgotPasswordDto = req.body;
+      const userId = Buffer.from(userData.token, 'base64').toString('ascii');
+      const user = await this.authService.findUserById(userId);
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+      const signUpUserData: User = await this.authService.resetPassword(user.email, userData.password);
+      res.status(201).json({ data: signUpUserData, message: 'Password reset successfully.', status: true });
     } catch (error) {
       next(error);
     }

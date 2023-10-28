@@ -71,9 +71,6 @@ class SubscriptionService {
         },
       );
 
-      console.log('=========================================================================================================');
-      console.log(setObject, 'setObject', createData);
-      console.log('=========================================================================================================');
       // create transaction and check response is available or not
       if (subscriptionData?.response != null) {
         trans = {

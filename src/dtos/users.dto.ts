@@ -1,10 +1,11 @@
-import { IsEmail, IsString, MaxLength, IsOptional, IsArray, ArrayMinSize, ArrayMaxSize, IsUrl, IsNumber } from 'class-validator';
+import { IsEmail, IsString, MaxLength, IsOptional, IsArray, ArrayMinSize, ArrayMaxSize } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
   public email: string;
 
   @IsString()
+  @IsOptional()
   public type: string;
 
   @IsString()
@@ -74,7 +75,17 @@ export class FanPasswordDto {
   @IsString()
   public password: string;
 }
+export class ForgotPasswordDto {
+  @IsString()
+  public token: string;
 
+  @IsString()
+  public password: string;
+}
+export class ForgotPasswordEmailDto {
+  @IsString()
+  public email: string;
+}
 export class FanDateOfBirthDto {
   @IsString()
   public userId: string;
@@ -187,7 +198,7 @@ export class ModelLinksDto {
   public userId: string;
 
   @IsArray()
-  @ArrayMinSize(3)
+  @ArrayMinSize(1)
   @ArrayMaxSize(5)
   //@IsUrl({ each: true, require_protocol: true, require_valid_protocol: true })
   public links: string[];
