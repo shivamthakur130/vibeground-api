@@ -42,11 +42,13 @@ class SubscriptionController {
           //fetch the subscription data and update base on data given
           const subData: Subscription = await this.subscriptionService.update(duration, subscriptionData);
           console.log(subData, 'subData');
+          const subscriptionDetails = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
           // return plan data as well
           const planData: Plan = await this.subscriptionService.getPlanDetails(subscriptionData.planId);
           const subDetails = {
             ...subData._doc,
             planDetails: planData,
+            subscriptionDetails,
           };
           //return the response
           res.status(201).json({ data: subDetails, message: 'subscription created successfully', status: true });

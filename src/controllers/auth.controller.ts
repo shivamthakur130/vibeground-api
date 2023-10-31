@@ -158,7 +158,7 @@ class AuthController {
         res.status(201).json({ data: signUpUserData, message: 'photos saved successfully.', status: true });
       } else {
         if (userData?.photosExisting != null && userData?.photosExisting.length > 0) {
-          userData.photos = photosExisting;
+          userData.photos = userData?.photosExisting;
           const signUpUserData: User = await this.authService.ModelPhotos(userData);
           delete signUpUserData.password;
           res.status(201).json({ data: signUpUserData, message: 'photos saved successfully.', status: true });
@@ -212,7 +212,7 @@ class AuthController {
       } else {
         console.log(videosExisting, 'videosExisting');
         if (userData?.videosExisting != null && userData?.videosExisting.length > 0) {
-          userData.videos = videosExisting;
+          userData.videos = userData?.videosExisting;
           const signUpUserData: User = await this.authService.ModelVideos(userData);
           delete signUpUserData.password;
 
