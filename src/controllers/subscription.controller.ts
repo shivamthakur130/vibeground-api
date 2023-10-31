@@ -41,16 +41,29 @@ class SubscriptionController {
 
           //fetch the subscription data and update base on data given
           const subData: Subscription = await this.subscriptionService.update(duration, subscriptionData);
-
+          console.log(subData, 'subData');
+          // return plan data as well
+          const planData: Plan = await this.subscriptionService.getPlanDetails(subscriptionData.planId);
+          const subDetails = {
+            ...subData._doc,
+            planDetails: planData,
+          };
           //return the response
-          res.status(201).json({ data: subData, message: 'subscription saved successfully', status: true });
+          res.status(201).json({ data: subDetails, message: 'subscription created successfully', status: true });
         }
       } else {
         // if no subscription create new
         const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, userId);
-        res.status(201).json({ data: subData, message: 'subscription created successfully', status: true });
+        // return plan data as well
+        const planData: Plan = await this.subscriptionService.getPlanDetails(subscriptionData.planId);
+        const subDetails = {
+          ...subData._doc,
+          planDetails: planData,
+        };
+        res.status(201).json({ data: subDetails, message: 'subscription created successfully', status: true });
       }
     } catch (error) {
+      console.log(error, 'error');
       next(error);
     }
   };

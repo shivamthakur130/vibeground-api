@@ -209,6 +209,6 @@ export class ModelCategoriesDto {
 
   @IsArray()
   @ArrayMinSize(5)
-  @ArrayMaxSize(5)
+  @ArrayMaxSize(20)
   public categories: string[];
 }

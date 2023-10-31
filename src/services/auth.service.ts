@@ -438,10 +438,10 @@ class AuthService {
     return findUser;
   }
 
-  // public async getUserPlan(userid: string): Promise<any> {
-  //   const latest: any = await this.plans.findOne({ userId: userid });
-  //   return latest;
-  // }
+  public async getUserPlan(userid: string): Promise<any> {
+    const latest: any = await this.plans.findOne({ userId: userid });
+    return latest;
+  }
   public async getUserSubscription(userid: string): Promise<any> {
     await this.expirySubscriptionCheck(userid);
     const latest: any = await this.subscriptions.findOne({ userId: userid, status: 'active' }).populate('planId');
@@ -483,8 +483,12 @@ class AuthService {
   public async me(userId: string): Promise<User> {
     const findUser: any = await this.users.findOne({ _id: userId });
     if (!findUser) throw new HttpException(409, `This user not found`);
+
     const subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
     findUser._doc.subscription = subscription;
+    // const plan: any = await this.getUserPlan(findUser._doc._id.toString());
+    // findUser._doc.plan = plan;
+
     return findUser;
   }
 

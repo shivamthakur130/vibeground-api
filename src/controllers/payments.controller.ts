@@ -27,7 +27,7 @@ class PaymentsController {
       const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-08-16' } as Stripe.StripeConfig);
       const myPayment = await stripe.paymentIntents.create({
         amount: findPlan.price * 100,
-        currency: 'CHF',
+        currency: 'EUR',
         metadata: {
           company: 'Vibe Ground!',
         },

@@ -18,6 +18,11 @@ class SubscriptionService {
     return plans;
   }
 
+  public async getPlanDetails(planId: string): Promise<Plan> {
+    const plans: Plan = await this.plans.findOne({ _id: planId });
+    return plans;
+  }
+
   public async create(planId: string, userId: string): Promise<Subscription> {
     if (isEmpty(planId)) throw new HttpException(400, 'Plan id is required.');
     if (isEmpty(userId)) throw new HttpException(400, 'User id is required.');

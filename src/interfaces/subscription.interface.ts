@@ -1,4 +1,5 @@
 export interface Subscription {
+  [x: string]: any;
   _id: string;
   userId: string;
   planId: string;

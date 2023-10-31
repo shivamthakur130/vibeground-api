@@ -130,6 +130,7 @@ class AuthController {
       }
       const photos: string[] = [];
       const photosExisting: string[] = [];
+      console.log(userData?.photosExisting, 'userData?.photosExisting');
 
       if (req?.files != null && req?.files.length > 0) {
         for (let i = 0; i < req?.files.length; i++) {
@@ -154,9 +155,16 @@ class AuthController {
         userData.photos = photosExisting;
         const signUpUserData: User = await this.authService.ModelPhotos(userData);
         delete signUpUserData.password;
-        res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+        res.status(201).json({ data: signUpUserData, message: 'photos saved successfully.', status: true });
       } else {
-        throw new HttpException(404, `Atleast one image is required.`);
+        if (userData?.photosExisting != null && userData?.photosExisting.length > 0) {
+          userData.photos = photosExisting;
+          const signUpUserData: User = await this.authService.ModelPhotos(userData);
+          delete signUpUserData.password;
+          res.status(201).json({ data: signUpUserData, message: 'photos saved successfully.', status: true });
+        } else {
+          throw new HttpException(404, `At least one image is required.`);
+        }
       }
     } catch (error) {
       next(error);
@@ -199,9 +207,19 @@ class AuthController {
         userData.videos = videosExisting;
         const signUpUserData: User = await this.authService.ModelVideos(userData);
         delete signUpUserData.password;
-        res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+
+        res.status(201).json({ data: signUpUserData, message: 'Videos saved successfully.', status: true });
       } else {
-        throw new HttpException(404, `Atleast one image is required.`);
+        console.log(videosExisting, 'videosExisting');
+        if (userData?.videosExisting != null && userData?.videosExisting.length > 0) {
+          userData.videos = videosExisting;
+          const signUpUserData: User = await this.authService.ModelVideos(userData);
+          delete signUpUserData.password;
+
+          res.status(201).json({ data: signUpUserData, message: 'Videos saved successfully.', status: true });
+        } else {
+          throw new HttpException(404, `At least one image is required.`);
+        }
       }
     } catch (error) {
       next(error);
@@ -234,7 +252,7 @@ class AuthController {
         throw new HttpException(404, `User not found.`);
       }
       const signUpUserData: User = await this.authService.ModelCategories(userData);
-      res.status(201).json({ data: signUpUserData, message: 'signup', status: true });
+      res.status(201).json({ data: signUpUserData, message: 'Model category updated.', status: true });
     } catch (error) {
       next(error);
     }
