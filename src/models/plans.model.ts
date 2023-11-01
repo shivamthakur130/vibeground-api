@@ -71,6 +71,10 @@ const PlanSchema: Schema = new Schema({
       type: String,
       default: 'none',
     },
+    newComerOfWeek: {
+      type: String,
+      default: 'none',
+    },
   },
   recommended: {
     type: Boolean,

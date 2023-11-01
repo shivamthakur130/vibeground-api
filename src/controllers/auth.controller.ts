@@ -460,6 +460,49 @@ class AuthController {
     }
   };
 
+  public updateUserDetails = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userData: User = req.user;
+      const userId = userData._id;
+      // console.log(req.body, 'req.body', userId);
+      // check if email is already exists
+      const user = await this.authService.findUserByEmail(req.body.email);
+      // console.log(user, 'user', userId);
+      if (user != null && user._id != req.body.userId) {
+        throw new HttpException(400, `Email already exists.`);
+      }
+      const findUser = await this.authService.UpdateUserDetails(userId, req.body);
+      res.status(200).json({ data: findUser, message: 'User details updated successfully.', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public changePassword = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userData: User = req.user;
+      const userId = userData._id;
+      console.log(req.body, 'req.body', userId);
+      //compare old password and user
+      const user = await this.authService.comparePassword(req.body, userId);
+      if (user == null) {
+        throw new HttpException(404, `User not found.`);
+      }
+
+      // password validation
+      if (req.body.password.length < 8) {
+        throw new HttpException(400, `password must be at least 8 characters.`);
+      } else if (!req.body.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[@!#$%&? "]).*$/)) {
+        throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters @,#,$,%,&,!.`);
+      }
+
+      const userDetails: User = await this.authService.changePassword(userId, req.body);
+      res.status(201).json({ data: userDetails, message: 'Password changed successfully.', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   //forgotPassword
   public forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {

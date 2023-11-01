@@ -361,6 +361,63 @@ class AuthService {
     return findUserT;
   }
 
+  public async UpdateUserDetails(userId: string, userData: any): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    userData.date_of_birth = moment(userData.date_of_birth, 'DD-MM-YYYY').utcOffset('+05:30');
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userData.userId },
+      {
+        $set: {
+          ...userData,
+        },
+      },
+    );
+
+    const findUserT: any = await this.users.findOne({ _id: userData.userId });
+
+    delete findUserT._doc.password;
+    const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+    findUserT._doc.date_of_birth = dob;
+    return findUserT;
+  }
+
+  public changePassword = async (userId: string, userData: any): Promise<User> => {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+    const hashedPassword = await hash(userData.password, 10);
+    const createUserData: User = await this.users.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          password: hashedPassword,
+        },
+      },
+    );
+
+    const findUserT: any = await this.users.findOne({ _id: userId });
+
+    const tokenData = this.createToken(findUserT);
+    findUserT._doc.token = tokenData.token;
+    delete findUserT._doc.password;
+    if (findUserT._doc?.date_of_birth != null) {
+      const dob = moment(findUserT._doc.date_of_birth).format('DD-MM-YYYY');
+      findUserT._doc.date_of_birth = dob;
+    }
+    return findUserT;
+  };
+
+  public async comparePassword(userData: any, userId: any): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+
+    const findUser: any = await this.users.findOne({ _id: userId });
+    if (!findUser) throw new HttpException(409, `This user not found`);
+
+    const isPasswordMatching: boolean = await compare(userData.oldPassword, findUser.password);
+    if (!isPasswordMatching) throw new HttpException(409, 'Old Password is wrong!');
+
+    return findUser;
+  }
+
   // other
   public async findUserByIdWithType(userid: String, type: String): Promise<User> {
     const findUser: User = await this.users.findOne({ _id: userid, type: type });
