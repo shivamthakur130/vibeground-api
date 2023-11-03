@@ -38,7 +38,7 @@ class AuthController {
       // password validation
       if (userData.password.length < 8) {
         throw new HttpException(400, `password must be at least 8 characters.`);
-      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[@!#$%&? "]).*$/)) {
+      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[.@!#$%&? "]).*$/)) {
         throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters @,#,$,%,&,!.`);
       }
       const signUpUserData: User = await this.authService.ModelDetails(userData);
@@ -297,7 +297,7 @@ class AuthController {
       // password validation
       if (userData.password.length < 8) {
         throw new HttpException(400, `password must be at least 8 characters.`);
-      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[@!#$%&? "]).*$/)) {
+      } else if (!userData.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[.@!#$%&? "]).*$/)) {
         throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters @,#,$,%,&,!.`);
       }
 
@@ -492,7 +492,7 @@ class AuthController {
       // password validation
       if (req.body.password.length < 8) {
         throw new HttpException(400, `password must be at least 8 characters.`);
-      } else if (!req.body.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[@!#$%&? "]).*$/)) {
+      } else if (!req.body.password.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[.@!#$%&? "]).*$/)) {
         throw new HttpException(400, `password must contain at least 1 letter, 1 number and 1 one of the characters @,#,$,%,&,!.`);
       }
 
