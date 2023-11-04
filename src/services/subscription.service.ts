@@ -46,7 +46,6 @@ class SubscriptionService {
       //check subscription status available or not  if it's available then update check the payment status is succeeded or not
       if (subscriptionData?.status != null && subscriptionData?.status != '') {
         if (subscriptionData?.status == 'succeeded') {
-          console.log(duration, 'duration');
           setObject['status'] = 'active';
 
           // update expiry date and purchase date

@@ -3,10 +3,12 @@ import { Subscription } from '@interfaces/subscription.interface';
 import { Plan } from '@interfaces/plan.interface';
 import { MakeSubscriptionDto } from '@dtos/subscription.dto';
 import SubscriptionService from '@services/subscription.service';
+import AuthService from '@/services/auth.service';
 import { HttpException } from '@exceptions/HttpException';
 
 class SubscriptionController {
   public subscriptionService = new SubscriptionService();
+  public authService = new AuthService();
 
   public getSubscription = async (req: any, res: Response, next: NextFunction) => {
     try {
@@ -45,12 +47,19 @@ class SubscriptionController {
           const subscriptionDetails = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
           // return plan data as well
           const planData: Plan = await this.subscriptionService.getPlanDetails(subscriptionData.planId);
+          const userData = {
+            userId: userId,
+            status: 'active',
+          };
+          // update user status
+          await this.authService.UpdateUserDetails(userId, userData);
+
           const subDetails = {
             ...subData._doc,
             planDetails: planData,
             subscriptionDetails,
           };
-          //return the response
+
           res.status(201).json({ data: subDetails, message: 'subscription created successfully', status: true });
         }
       } else {

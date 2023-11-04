@@ -364,7 +364,10 @@ class AuthService {
   public async UpdateUserDetails(userId: string, userData: any): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
-    userData.date_of_birth = moment(userData.date_of_birth, 'DD-MM-YYYY').utcOffset('+05:30');
+    if (userData.date_of_birth) {
+      userData.date_of_birth = moment(userData.date_of_birth, 'DD-MM-YYYY').utcOffset('+05:30');
+    }
+
     const createUserData: User = await this.users.findOneAndUpdate(
       { _id: userData.userId },
       {
@@ -499,9 +502,10 @@ class AuthService {
     const latest: any = await this.plans.findOne({ userId: userid });
     return latest;
   }
+
   public async getUserSubscription(userid: string): Promise<any> {
     await this.expirySubscriptionCheck(userid);
-    const latest: any = await this.subscriptions.findOne({ userId: userid, status: 'active' }).populate('planId');
+    const latest: any = await this.subscriptions.findOne({ userId: userid }).populate('planId');
     return latest;
   }
 
@@ -543,8 +547,6 @@ class AuthService {
 
     const subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
     findUser._doc.subscription = subscription;
-    // const plan: any = await this.getUserPlan(findUser._doc._id.toString());
-    // findUser._doc.plan = plan;
 
     return findUser;
   }

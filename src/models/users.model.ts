@@ -80,7 +80,7 @@ const userSchema: Schema = new Schema({
   status: {
     type: String,
     enum: ['active', 'inactive'],
-    default: 'active',
+    default: 'inactive',
   },
   provider: {
     type: String,
