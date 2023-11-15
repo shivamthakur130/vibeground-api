@@ -67,6 +67,7 @@ class SubscriptionController {
         const subData: Subscription = await this.subscriptionService.create(subscriptionData.planId, userId);
         // return plan data as well
         const planData: Plan = await this.subscriptionService.getPlanDetails(subscriptionData.planId);
+        console.log(planData, 'planData');
         const subDetails = {
           ...subData._doc,
           planDetails: planData,

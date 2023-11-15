@@ -44,6 +44,7 @@ class AuthController {
       const signUpUserData: User = await this.authService.ModelDetails(userData);
       res.status(201).json({ data: signUpUserData, message: 'Model details updated successfully.', status: true });
     } catch (error) {
+      console.log(error, 'error');
       next(error);
     }
   };

@@ -6,6 +6,7 @@ import PlanRoute from '@routes/plan.route';
 import TransactionRoute from '@routes/transaction.route';
 import SubscriptionRoute from '@routes/subscription.route';
 import PaymentsRoute from '@routes/payments.route';
+import MeetAndGreetRoute from '@routes/meetAndGreet.route';
 import validateEnv from '@utils/validateEnv';
 
 try {
@@ -18,6 +19,7 @@ try {
     new TransactionRoute(),
     new PaymentsRoute(),
     new SubscriptionRoute(),
+    new MeetAndGreetRoute(),
   ]);
 
   app.listen();
