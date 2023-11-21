@@ -469,8 +469,8 @@ class AuthService {
   public async login(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
-    const findUser: any = await this.users.findOne({ email: userData.email, type: userData.type });
-    // const findUser: any = await this.users.findOne({ email: userData.email });
+    // const findUser: any = await this.users.findOne({ email: userData.email, type: userData.type });
+    const findUser: any = await this.users.findOne({ email: userData.email });
 
     if (!findUser) throw new HttpException(409, `Invalid credentials, please try again.`);
 
