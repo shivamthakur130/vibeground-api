@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import MeetAndGreetsController from '@controllers/meetAndGreet.controller';
-import { SignUpMeetAndGreetsDto } from '@dtos/meetAndGreets.dto';
+import { SignUpMeetAndGreetsDto, BuyTicketDto } from '@dtos/meetAndGreets.dto';
 import { Routes } from '@interfaces/routes.interface';
 import validationMiddleware from '@middlewares/validation.middleware';
 import modelMiddleware from '@middlewares/model.middleware';
@@ -29,6 +29,12 @@ class MeetAndGreetRoute implements Routes {
 
     // this.router.put(`${this.path}/update/:planId`, authMiddleware, validationMiddleware(UpdatePlansDto, 'body'), this.plansController.update);
     // this.router.delete(`${this.path}/delete/:planId`, authMiddleware, validationMiddleware(paramIdDto, 'params'), this.plansController.delete);
+
+    //get-model
+    this.router.get(`${this.path}/get-model/:id`, authMiddleware, this.meetAndGreetsController.getModelMeetAndGreets);
+
+    //buy ticket for meet and greet
+    this.router.post(`${this.path}/buy-ticket`, authMiddleware, validationMiddleware(BuyTicketDto, 'body'), this.meetAndGreetsController.buyTicket);
   }
 }
 

@@ -11,3 +11,11 @@ export class SignUpMeetAndGreetsDto {
   @IsString()
   public instagramId: string;
 }
+
+export class BuyTicketDto {
+  @IsString()
+  public id: string;
+
+  // @IsString()
+  // public meetAndGreetId: string;
+}

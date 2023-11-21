@@ -1,12 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 import { SignUpMeetAndGreetsDto } from '@dtos/meetAndGreets.dto';
 import { MeetAndGreet } from '@interfaces/meet-greet.interface';
+import { User } from '@/interfaces/users.interface';
 import MeetAndGreetService from '@/services/meet-greet.service';
+import UserService from '@/services/users.service';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { HttpException } from '@exceptions/HttpException';
+import EmailService from '@/services/email.service';
 
 class MeetAndGreetsController {
   public meetAndGreetService = new MeetAndGreetService();
+  public userService = new UserService();
+  public emailService = new EmailService();
 
   public getMeetAndGreetByUserId = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
@@ -39,7 +44,7 @@ class MeetAndGreetsController {
     try {
       const meetAndGreetId: string = req.params.meetAndGreetId;
       const deleteMeetAndGreetData: MeetAndGreet = await this.meetAndGreetService.delete(meetAndGreetId);
-      res.status(200).json({ data: deleteMeetAndGreetData, message: 'Meet and greet Deleted', success: true });
+      res.status(200).json({ data: deleteMeetAndGreetData, message: 'Meet and greet Deleted', status: true });
     } catch (error) {
       next(error);
     }
@@ -50,7 +55,7 @@ class MeetAndGreetsController {
       const meetAndGreetId: string = req.params.meetAndGreetId;
       const meetAndGreetData: SignUpMeetAndGreetsDto = req.body;
       const updateMeetAndGreetData: MeetAndGreet = await this.meetAndGreetService.update(meetAndGreetId, meetAndGreetData);
-      res.status(200).json({ data: updateMeetAndGreetData, message: 'Meet and greet Updated', success: true });
+      res.status(200).json({ data: updateMeetAndGreetData, message: 'Meet and greet Updated', status: true });
     } catch (error) {
       next(error);
     }
@@ -60,7 +65,35 @@ class MeetAndGreetsController {
     try {
       const meetAndGreetId: string = req.params.meetAndGreetId;
       const findOneMeetAndGreetData: MeetAndGreet = await this.meetAndGreetService.findById(meetAndGreetId);
-      res.status(200).json({ data: findOneMeetAndGreetData, message: 'Meet and greet fetch successfully', success: true });
+      res.status(200).json({ data: findOneMeetAndGreetData, message: 'Meet and greet fetch successfully', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getModelMeetAndGreets = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = '655a554a09facc7a369559a0';
+      const userModel: User = await this.userService.findUserById(userId);
+      res.status(200).json({ data: userModel, message: 'Model for user', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public buyTicket = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user._id.toString();
+      // get the email and send it to the user about your ticket is booked
+      const findUser = await this.userService.findUserById(userId);
+      const email = findUser.email;
+      const subject = 'Ticket booked';
+      const html = 'Your ticket is booked';
+      await this.emailService.sendEmail(email, subject, html);
+      const booked = {
+        isBooked: true,
+        userId: userId,
+      };
+      res.status(201).json({ data: booked, message: 'Ticket booked', status: true });
     } catch (error) {
       next(error);
     }
