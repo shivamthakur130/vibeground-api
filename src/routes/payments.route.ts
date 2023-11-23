@@ -22,6 +22,9 @@ class PaymentsRoute implements Routes {
       this.paymentController.processPayment,
     );
     this.router.get(`${this.path}/sendStripeApiKey`, authMiddleware, this.paymentController.sendStripeApiKey);
+
+    //get all cards
+    this.router.get(`${this.path}/getCards`, authMiddleware, this.paymentController.getCards);
   }
 }
 

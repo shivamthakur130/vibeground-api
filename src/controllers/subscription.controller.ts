@@ -28,12 +28,13 @@ class SubscriptionController {
   public makeSubscription = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const subscriptionData: MakeSubscriptionDto = req.body;
-      // console.log(req.user._id.toString(), 'user id');
+
       //check if user has subscription
       const userId = subscriptionData.userId;
       if (req.body?.subscriptionId != null && req.body?.subscriptionId != '') {
         //find subscription update subscription
         const subscriptionDataGet: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
+        console.log(subscriptionDataGet, 'subscriptionDataGet');
         if (subscriptionDataGet == null) {
           throw new HttpException(404, `Subscription not found.`);
         }
@@ -43,14 +44,17 @@ class SubscriptionController {
 
           //fetch the subscription data and update base on data given
           const subData: Subscription = await this.subscriptionService.update(duration, subscriptionData);
-          console.log(subData, 'subData');
+
           const subscriptionDetails = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
+
           // return plan data as well
           const planData: Plan = await this.subscriptionService.getPlanDetails(subscriptionData.planId);
+
           const userData = {
             userId: userId,
             status: 'active',
           };
+
           // update user status
           await this.authService.UpdateUserDetails(userId, userData);
 
@@ -59,6 +63,30 @@ class SubscriptionController {
             planDetails: planData,
             subscriptionDetails,
           };
+
+          res.status(201).json({ data: subDetails, message: 'subscription created successfully', status: true });
+        } else {
+          console.log('payment failed');
+          //update plan id and status
+          const subData: Subscription = await this.subscriptionService.update(0, subscriptionData);
+
+          //if payment failed
+          const userData = {
+            userId: userId,
+            status: 'inactive',
+          };
+
+          const planData: Plan = await this.subscriptionService.getPlanDetails(subscriptionData.planId);
+
+          console.log(planData, 'planData');
+
+          const subDetails = {
+            ...subData._doc,
+            planDetails: planData,
+          };
+
+          // update user status
+          await this.authService.UpdateUserDetails(userId, userData);
 
           res.status(201).json({ data: subDetails, message: 'subscription created successfully', status: true });
         }
