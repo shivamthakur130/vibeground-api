@@ -34,7 +34,7 @@ class SubscriptionController {
       if (req.body?.subscriptionId != null && req.body?.subscriptionId != '') {
         //find subscription update subscription
         const subscriptionDataGet: any = await this.subscriptionService.findById(req.body?.subscriptionId, userId);
-        console.log(subscriptionDataGet, 'subscriptionDataGet');
+
         if (subscriptionDataGet == null) {
           throw new HttpException(404, `Subscription not found.`);
         }
