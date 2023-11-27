@@ -457,6 +457,7 @@ class AuthController {
       const findUser = await this.authService.me(userId);
       res.status(200).json({ data: findUser, message: 'me' });
     } catch (error) {
+      console.log(error, 'error');
       next(error);
     }
   };

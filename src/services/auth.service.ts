@@ -546,11 +546,12 @@ class AuthService {
     if (!findUser) throw new HttpException(409, `This user not found`);
 
     const subscription: any = await this.getUserSubscription(findUser._doc._id.toString());
-    findUser._doc.subscription = subscription;
-    findUser._doc.planId = subscription.planId._id;
-    findUser._doc.subscriptionId = subscription._id;
-    findUser._doc.plan = subscription.planId;
-
+    if (subscription) {
+      findUser._doc.subscription = subscription;
+      findUser._doc.planId = subscription.planId._id;
+      findUser._doc.subscriptionId = subscription._id;
+      findUser._doc.plan = subscription.planId;
+    }
     return findUser;
   }
 
