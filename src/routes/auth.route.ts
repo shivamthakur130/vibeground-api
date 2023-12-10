@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
+import CommonController from '@controllers/common.controller';
 import {
   CreateUserDto,
   FanEmailDto,
@@ -27,13 +28,14 @@ import validationMiddleware from '@middlewares/validation.middleware';
 import { cloudinary } from '@utils/cloudinary';
 import multer from 'multer';
 import { CloudinaryStorage, Options } from 'multer-storage-cloudinary';
-
+import { SupportDto } from '@dtos/common.dto';
 import { CLOUDINARY_IMAGE_FOLDER, CLOUDINARY_VIDEO_FOLDER } from '@config';
 
 class AuthRoute implements Routes {
   public path = '/';
   public router = Router();
   public authController = new AuthController();
+  public commonController = new CommonController();
   public upload = multer({
     storage: new CloudinaryStorage({
       cloudinary: cloudinary,
@@ -116,6 +118,7 @@ class AuthRoute implements Routes {
       // other
       /*  this.router.post(`${this.path}signup`, validationMiddleware(CreateUserDto, 'body'), this.authController.signUp);*/
       this.router.post(`${this.path}query`, validationMiddleware(QueryUserDto, 'body'), this.authController.query);
+      this.router.post(`${this.path}support`, validationMiddleware(SupportDto, 'body'), this.commonController.support);
       this.router.post(`${this.path}login`, validationMiddleware(CreateUserDto, 'body'), this.authController.logIn);
       this.router.post(`${this.path}logout`, authMiddleware, this.authController.logOut);
       this.router.get(`${this.path}me`, authMiddleware, this.authController.me);
