@@ -60,6 +60,17 @@ class UsersController {
       next(error);
     }
   };
+
+  public getModelProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: string = req.params.id;
+      const modelProfile: User = await this.userService.getModelProfile(userId);
+
+      res.status(200).json({ data: modelProfile, message: 'get model profile' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default UsersController;

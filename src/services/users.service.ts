@@ -59,6 +59,13 @@ class UserService {
 
     return deleteUserById;
   }
+
+  public async getModelProfile(userId: string): Promise<User> {
+    const modelProfile: User = await this.users.findById(userId);
+    if (!modelProfile) throw new HttpException(409, "User doesn't exist");
+
+    return modelProfile;
+  }
 }
 
 export default UserService;
