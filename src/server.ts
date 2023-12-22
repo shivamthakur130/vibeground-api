@@ -8,6 +8,7 @@ import SubscriptionRoute from '@routes/subscription.route';
 import PaymentsRoute from '@routes/payments.route';
 import MeetAndGreetRoute from '@routes/meetAndGreet.route';
 import Collaborate from './routes/collaborate.route';
+import CommonRoute from './routes/common.route';
 import validateEnv from '@utils/validateEnv';
 
 try {
@@ -22,6 +23,7 @@ try {
     new SubscriptionRoute(),
     new MeetAndGreetRoute(),
     new Collaborate(),
+    new CommonRoute(),
   ]);
 
   app.listen();

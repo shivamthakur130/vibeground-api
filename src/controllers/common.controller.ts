@@ -2,10 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import AuthService from '@services/auth.service';
 import EmailService from '@services/email.service';
 import { SupportDto } from '@dtos/common.dto';
+import CityService from '@/services/city.service';
 
 class CommonController {
   public authService = new AuthService();
   public emailService = new EmailService();
+  public cityService = new CityService();
 
   public support = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -31,6 +33,17 @@ class CommonController {
       const response = await this.emailService.sendEmail(userData.email, 'Support from user', htmlTemplate);
 
       res.status(200).json({ data: userData, message: 'Support sent', status: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getCities = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { countryCode } = req.params;
+      console.log(countryCode, 'countryCodecountryCodecountryCode');
+      const cities = await this.cityService.findByCountryCode(countryCode);
+      res.status(200).json({ data: cities, message: 'cities', status: true });
     } catch (error) {
       next(error);
     }

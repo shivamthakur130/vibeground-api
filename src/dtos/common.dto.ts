@@ -10,3 +10,8 @@ export class SupportDto {
   @IsString()
   public reason: string;
 }
+
+export class GetCitiesDto {
+  @IsString()
+  public countryCode: string;
+}
