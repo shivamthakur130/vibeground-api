@@ -17,7 +17,6 @@ class MeetAndGreetRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/get`, authMiddleware, modelMiddleware, this.meetAndGreetsController.getMeetAndGreetByUserId);
-    // this.router.get(`${this.path}/get-details/:planId`, validationMiddleware(paramIdDto, 'params'), this.plansController.getPlanById);
 
     this.router.post(
       `${this.path}/signup`,
@@ -26,9 +25,6 @@ class MeetAndGreetRoute implements Routes {
       validationMiddleware(SignUpMeetAndGreetsDto, 'body'),
       this.meetAndGreetsController.signup,
     );
-
-    // this.router.put(`${this.path}/update/:planId`, authMiddleware, validationMiddleware(UpdatePlansDto, 'body'), this.plansController.update);
-    // this.router.delete(`${this.path}/delete/:planId`, authMiddleware, validationMiddleware(paramIdDto, 'params'), this.plansController.delete);
 
     //get-model
     this.router.get(`${this.path}/get-model/:id`, authMiddleware, this.meetAndGreetsController.getModelMeetAndGreets);

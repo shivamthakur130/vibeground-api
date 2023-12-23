@@ -7,6 +7,7 @@ import UserService from '@/services/users.service';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { HttpException } from '@exceptions/HttpException';
 import EmailService from '@/services/email.service';
+import { emailConfig } from '@config';
 
 class MeetAndGreetsController {
   public meetAndGreetService = new MeetAndGreetService();
@@ -34,6 +35,18 @@ class MeetAndGreetsController {
 
       const prepareData = { ...meetAndGreetData, userId: userId };
       const findAllMeetAndGreets: MeetAndGreet = await this.meetAndGreetService.create(prepareData);
+      //send email to admin
+      const subject = 'Meet and greet signup';
+      const html = `
+      <h1>Meet and greet signup</h1>
+      <p>Meet and greet signup by : ${meetAndGreetData.emailId}</p>
+      <p>Phone Number: ${meetAndGreetData.phoneNumber}</p>
+      <p>Instagram Id: ${meetAndGreetData.instagramId}</p>
+      <p>Regards,<br/> Api Response</p>
+      `;
+
+      await this.emailService.sendEmail(emailConfig.email.adminEmail, subject, html);
+
       res.status(201).json({ data: findAllMeetAndGreets, message: 'Meet and greet created', success: true });
     } catch (error) {
       next(error);

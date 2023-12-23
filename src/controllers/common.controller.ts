@@ -41,7 +41,6 @@ class CommonController {
   public getCities = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { countryCode } = req.params;
-      console.log(countryCode, 'countryCodecountryCodecountryCode');
       const cities = await this.cityService.findByCountryCode(countryCode);
       res.status(200).json({ data: cities, message: 'cities', status: true });
     } catch (error) {

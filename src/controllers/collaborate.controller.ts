@@ -7,6 +7,7 @@ import UserService from '@/services/users.service';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { HttpException } from '@exceptions/HttpException';
 import EmailService from '@/services/email.service';
+import { emailConfig } from '@config';
 
 class CollaborateController {
   public collaborateService = new CollaborateService();
@@ -34,7 +35,17 @@ class CollaborateController {
 
       const prepareData = { ...collaborateData, userId: userId };
       const findAllMeetAndGreets: Collaborate = await this.collaborateService.create(prepareData);
+      //send email to admin
+      const subject = 'Meet and greet signup';
+      const html = `
+        <h1>Collaborate signup</h1>
+        <p>Collaborate signup by : ${collaborateData.emailId}</p>
+        <p>Phone Number: ${collaborateData.phoneNumber}</p>
+        <p>Instagram Id: ${collaborateData.instagramId}</p>
+        <p>Regards,<br/> Api Response</p>
+              `;
 
+      await this.emailService.sendEmail(emailConfig.email.adminEmail, subject, html);
       res.status(201).json({ data: findAllMeetAndGreets, message: 'Collaborate created', success: true });
     } catch (error) {
       next(error);
