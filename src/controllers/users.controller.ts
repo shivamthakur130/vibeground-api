@@ -71,6 +71,28 @@ class UsersController {
       next(error);
     }
   };
+
+  public getAllModelsProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      console.log('get all models profile');
+      const modelProfile: User[] = await this.userService.getAllModelsProfile();
+
+      res.status(200).json({ data: modelProfile, message: 'Get all models profile' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getModelProfileById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: string = req.params.id;
+      const modelProfile: User = await this.userService.getModelProfileById(userId);
+
+      res.status(200).json({ data: modelProfile, message: 'Get model profile by id' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default UsersController;

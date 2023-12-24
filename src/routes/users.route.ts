@@ -15,6 +15,11 @@ class UsersRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.usersController.getUsers);
+
+    //get-all-models
+    this.router.get(`${this.path}/get-all-models`, this.usersController.getAllModelsProfile);
+    // this.router.get(`${this.path}/get-all-models/:id`, this.usersController.getModelProfileById);
+
     this.router.get(`${this.path}/:id`, this.usersController.getUserById);
     this.router.post(`${this.path}`, validationMiddleware(CreateUserDto, 'body'), this.usersController.createUser);
     this.router.put(`${this.path}/:id`, validationMiddleware(CreateUserDto, 'body', true), this.usersController.updateUser);

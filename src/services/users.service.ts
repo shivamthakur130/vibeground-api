@@ -66,6 +66,21 @@ class UserService {
 
     return modelProfile;
   }
+
+  public async getAllModelsProfile(): Promise<User[]> {
+    //get all users has role model and is active
+    const modelProfile: User[] = await this.users.find({ role: 'model', isActive: true });
+    if (!modelProfile) throw new HttpException(409, "Model doesn't exist");
+
+    return modelProfile;
+  }
+
+  public async getModelProfileById(userId: string): Promise<User> {
+    const modelProfile: User = await this.users.findById(userId);
+    if (!modelProfile) throw new HttpException(409, "Model doesn't exist");
+
+    return modelProfile;
+  }
 }
 
 export default UserService;
