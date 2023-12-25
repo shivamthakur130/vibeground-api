@@ -31,6 +31,6 @@ const CollaborateSchema: Schema = new Schema({
   },
 });
 
-const planModel = model<Collaborate & Document>('collaborate', CollaborateSchema);
+const collaborateModel = model<Collaborate & Document>('collaborate', CollaborateSchema);
 
-export default planModel;
+export default collaborateModel;
