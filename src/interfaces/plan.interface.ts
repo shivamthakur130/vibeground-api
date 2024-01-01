@@ -12,4 +12,5 @@ export interface Plan {
   description: string;
   recommended: boolean;
   features: FeaturesInterface;
+  planType: string;
 }
