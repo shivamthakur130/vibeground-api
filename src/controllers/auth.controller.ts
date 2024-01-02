@@ -23,7 +23,7 @@ import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
 import EmailService from '@services/email.service';
 import { HttpException } from '@exceptions/HttpException';
-import { FRONTEND_URL } from '@config';
+import { FRONTEND_URL, emailConfig } from '@config';
 
 class AuthController {
   public authService = new AuthService();
@@ -401,7 +401,7 @@ class AuthController {
       </body>
       </html>`;
 
-      const response = await this.emailService.sendEmail(userData.email, 'Query from user', htmlTemplate);
+      const response = await this.emailService.sendEmail(emailConfig.email.adminEmail, 'Query from user', htmlTemplate);
 
       res.status(200).json({ data: null, message: 'Sign up done successfully.', status: true });
     } catch (error) {

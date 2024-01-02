@@ -3,6 +3,7 @@ import AuthService from '@services/auth.service';
 import EmailService from '@services/email.service';
 import { SupportDto } from '@dtos/common.dto';
 import CityService from '@/services/city.service';
+import { emailConfig } from '@config';
 
 class CommonController {
   public authService = new AuthService();
@@ -30,7 +31,7 @@ class CommonController {
       </body>
       </html>`;
 
-      const response = await this.emailService.sendEmail(userData.email, 'Support from user', htmlTemplate);
+      const response = await this.emailService.sendEmail(emailConfig.email.adminEmail, 'Support from user', htmlTemplate);
 
       res.status(200).json({ data: userData, message: 'Support sent', status: true });
     } catch (error) {
