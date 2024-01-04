@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
 import userService from '@services/users.service';
+import { RequestWithUser } from '@/interfaces/auth.interface';
 
 class UsersController {
   public userService = new userService();
@@ -72,10 +73,13 @@ class UsersController {
     }
   };
 
-  public getAllModelsProfile = async (req: Request, res: Response, next: NextFunction) => {
+  public getAllModelsProfile = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-      console.log('get all models profile');
-      const modelProfile: User[] = await this.userService.getAllModelsProfile();
+      const request = req.query;
+      const userId = req.user._id.toString();
+      console.log(userId, '==========================req');
+      const filterCategories = request?.filterCategories;
+      const modelProfile: User[] = await this.userService.getAllModelsProfile(filterCategories, userId);
 
       res.status(200).json({ data: modelProfile, message: 'Get all models profile' });
     } catch (error) {

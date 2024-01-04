@@ -65,7 +65,7 @@ class FavoriteService {
 
   public async update(Id: string, data: AddToFavoriteDto): Promise<Favorite> {
     if (isEmpty(data)) throw new HttpException(400, 'Invalid data');
-
+    console.log('data ================================================', data);
     const updateById: Favorite = await this.favorite.findByIdAndUpdate(Id, { ...data });
     if (!updateById) throw new HttpException(409, "Favorite doesn't exist");
 

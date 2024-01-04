@@ -6,4 +6,7 @@ export class AddToFavoriteDto {
 
   @IsString()
   public modelId: string;
+
+  @IsString()
+  public status: string;
 }

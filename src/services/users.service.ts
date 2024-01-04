@@ -3,10 +3,13 @@ import { CreateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
+import favoriteModel from '@/models/favorite.model';
 import { isEmpty } from '@utils/util';
+import { Favorite } from '@/interfaces/favorite.interface';
 
 class UserService {
   public users = userModel;
+  public favorite = favoriteModel;
 
   public async findAllUser(): Promise<User[]> {
     const users: User[] = await this.users.find();
@@ -67,9 +70,17 @@ class UserService {
     return modelProfile;
   }
 
-  public async getAllModelsProfile(): Promise<User[]> {
-    //get all users has role model and is active
-    const modelProfile: User[] = await this.users.find({ role: 'model', isActive: true });
+  public async getAllModelsProfile(filterCategories: any, userId: string): Promise<User[]> {
+    const filterQry = { role: 'model', isActive: true };
+    if (filterCategories !== '') {
+      console.log(filterCategories, '==========================filterCategories');
+      const filterCategoriesArray = filterCategories.split(',');
+      if (filterCategoriesArray.length > 0) filterQry['categories'] = { $in: filterCategoriesArray };
+    }
+    //eliminate those models which are in favorite list
+    const favoriteModels: Favorite[] = await this.favorite.find({ userId: userId }).select('modelId');
+    const favoriteModelsArray = favoriteModels.map(item => item.modelId);
+    const modelProfile: User[] = await this.users.find(filterQry).where('_id').nin(favoriteModelsArray);
     if (!modelProfile) throw new HttpException(409, "Model doesn't exist");
 
     return modelProfile;

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import e, { NextFunction, Request, Response } from 'express';
 import { AddToFavoriteDto } from '@dtos/favorite.dto';
 import { Favorite } from '@interfaces/favorite.interface';
 import FavoriteService from '@/services/favorite.service';
@@ -27,21 +27,27 @@ class FavoriteController {
       const favoriteData: AddToFavoriteDto = req.body;
       const userId = req.user._id.toString();
       const modelId = favoriteData.modelId;
+      const status = favoriteData.status;
 
       // check if already exist
       const favorite: Favorite | null = await this.favoriteService.findByModelIdUserId(modelId, userId);
-      if (favorite) throw new HttpException(409, 'Favorite already exist');
-
-      const prepareData = { ...favoriteData, userId: userId };
-      const findAllMeetAndGreets: Favorite = await this.favoriteService.create(prepareData);
-
-      res.status(201).json({ data: findAllMeetAndGreets, message: 'Favorite created', status: true });
+      if (favorite) {
+        if (favorite.status == status) throw new HttpException(409, 'You already liked this model');
+        else {
+          const updatedData: Favorite = await this.favoriteService.update(favorite._id, favoriteData);
+          res.status(200).json({ data: updatedData, message: 'Favorite Updated', status: true });
+        }
+      } else {
+        const prepareData = { ...favoriteData, userId: userId };
+        const findAllMeetAndGreets: Favorite = await this.favoriteService.create(prepareData);
+        res.status(201).json({ data: findAllMeetAndGreets, message: 'Favorite created', status: true });
+      }
     } catch (error) {
       next(error);
     }
   };
 
-  public getFavorites = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  public getAllFavorites = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const userId = req.user._id.toString();
       const favoriteData: Favorite[] = await this.favoriteService.findByUserIdAllModel(userId);

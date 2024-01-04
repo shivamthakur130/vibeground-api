@@ -21,9 +21,7 @@ class Collaborate implements Routes {
     this.router.post(`${this.path}/add`, authMiddleware, validationMiddleware(AddToFavoriteDto, 'body'), this.favoriteController.signup);
 
     //get-all-favorites
-    this.router.get(`${this.path}/get-all`, authMiddleware, this.favoriteController.getFavorites);
-    // //buy ticket for collaborate
-    // this.router.post(`${this.path}/buy-ticket`, authMiddleware, validationMiddleware(BuyTicketDto, 'body'), this.favoriteController.buyTicket);
+    this.router.get(`${this.path}/get-all`, authMiddleware, this.favoriteController.getAllFavorites);
   }
 }
 

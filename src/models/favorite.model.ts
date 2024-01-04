@@ -12,6 +12,11 @@ const FavoriteSchema: Schema = new Schema({
     ref: 'User',
     required: true,
   },
+  status: {
+    type: String,
+    default: 'accepted',
+    enum: ['accepted', 'rejected'],
+  },
   created_at: {
     type: Date,
     default: Date.now,
