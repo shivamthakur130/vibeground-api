@@ -31,7 +31,7 @@ class CommonController {
       </body>
       </html>`;
 
-      const response = await this.emailService.sendEmail('supportvibeground@mailinator.com', 'Support from user', htmlTemplate);
+      const response = await this.emailService.sendEmail('support@vibeground.com', 'Support from user', htmlTemplate);
 
       res.status(200).json({ data: userData, message: 'Support sent', status: true });
     } catch (error) {
