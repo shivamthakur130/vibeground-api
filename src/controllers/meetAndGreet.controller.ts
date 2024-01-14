@@ -27,8 +27,8 @@ class MeetAndGreetsController {
   public signup = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const meetAndGreetData: SignUpMeetAndGreetsDto = req.body;
+      const userData = req.user;
       const userId = req.user._id.toString();
-
       // check if already exist
       const meetAndGreet: MeetAndGreet = await this.meetAndGreetService.findByUserId(userId);
       if (meetAndGreet) throw new HttpException(409, 'Meet and greet already exist');
@@ -39,6 +39,7 @@ class MeetAndGreetsController {
       const subject = 'Meet and greet signup';
       const html = `
       <h1>Meet and greet signup</h1>
+      <p>User name: ${userData.firstName + ' ' + userData.lastName}</p>
       <p>Meet and greet signup by : ${meetAndGreetData.emailId}</p>
       <p>Phone Number: ${meetAndGreetData.phoneNumber}</p>
       <p>Instagram Id: ${meetAndGreetData.instagramId}</p>

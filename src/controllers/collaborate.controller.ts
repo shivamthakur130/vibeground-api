@@ -27,6 +27,7 @@ class CollaborateController {
   public signup = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const collaborateData: SignUpCollaborateDto = req.body;
+      const userData = req.user;
       const userId = req.user._id.toString();
 
       // check if already exist
@@ -39,6 +40,7 @@ class CollaborateController {
       const subject = 'Meet and greet signup';
       const html = `
         <h1>Collaborate signup</h1>
+        <p>User name: ${userData.firstName + ' ' + userData.lastName}</p>
         <p>Collaborate signup by : ${collaborateData.emailId}</p>
         <p>Phone Number: ${collaborateData.phoneNumber}</p>
         <p>Instagram Id: ${collaborateData.instagramId}</p>

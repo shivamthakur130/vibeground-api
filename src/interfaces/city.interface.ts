@@ -6,4 +6,5 @@ export interface City {
   response: string;
   status: string;
   address: string;
+  name: string;
 }

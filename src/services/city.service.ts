@@ -12,6 +12,8 @@ class CityService {
     if (isEmpty(countryCode)) throw new HttpException(400, 'Invalid country Code');
 
     const findCity: City[] = await this.cityModel.find({ country_code: countryCode });
+    //sort the cities by name
+    findCity.sort((a, b) => (a.name > b.name ? 1 : -1));
     if (!findCity) throw new HttpException(409, "City doesn't exist");
 
     return findCity;
