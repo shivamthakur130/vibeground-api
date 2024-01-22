@@ -36,7 +36,7 @@ class FavoriteService {
     if (isEmpty(userId)) throw new HttpException(400, 'Invalid userId');
 
     // model details with favorite all to that user
-    const findRecord = await this.favorite.find({ userId: userId }).populate('modelId', 'userName date_of_birth city photos');
+    const findRecord = await this.favorite.find({ userId: userId, status: 'accepted' }).populate('modelId', 'userName date_of_birth city photos');
     return findRecord;
   }
 

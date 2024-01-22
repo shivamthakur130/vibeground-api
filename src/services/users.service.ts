@@ -71,7 +71,7 @@ class UserService {
   }
 
   public async getAllModelsProfile(filterCategories: any, userId: string): Promise<User[]> {
-    const filterQry = { role: 'model', isActive: true };
+    const filterQry = { type: 'model', isActive: true };
     if (filterCategories !== '') {
       console.log(filterCategories, '==========================filterCategories');
       const filterCategoriesArray = filterCategories.split(',');
