@@ -22,6 +22,9 @@ class Collaborate implements Routes {
 
     //get-all-favorites
     this.router.get(`${this.path}/get-all`, authMiddleware, this.favoriteController.getAllFavorites);
+
+    //remove-favorite
+    this.router.delete(`${this.path}/remove/:id`, authMiddleware, this.favoriteController.delete);
   }
 }
 
